@@ -1,0 +1,122 @@
+[
+  {
+    "codigoHotel": "CH-0002",
+    "nombre": "Cataratas Hotel",
+    "lugar/Ciudad": "Puerto Iguazu",
+    "tipoDeHabitacion": "Doble",
+    "precioPorNoche": 6300,
+    "disponibleDesde": "10/02/2021",
+    "disponibleHasta": "20/03/2021",
+    "reservado": "NO"
+  },
+  {
+    "codigoHotel": "CH-0003",
+    "nombre": "Cataratas Hotel",
+    "lugar/Ciudad": "Puerto Iguazu",
+    "tipoDeHabitacion": "Triple",
+    "precioPorNoche": 8200,
+    "disponibleDesde": "10/02/2021",
+    "disponibleHasta": "23/03/2021",
+    "reservado": "NO"
+  },
+  {
+    "codigoHotel": "HB-0001",
+    "nombre": "Hotel Bristol",
+    "lugar/Ciudad": "Buenos Aires",
+    "tipoDeHabitacion": "Single",
+    "precioPorNoche": 5435,
+    "disponibleDesde": "23/03/2021",
+    "disponibleHasta": "19/03/2021",
+    "reservado": "NO"
+  },
+  {
+    "codigoHotel": "BH-0002",
+    "nombre": "Hotel Bristol",
+    "lugar/Ciudad": "Buenos Aires",
+    "tipoDeHabitacion": "Doble",
+    "precioPorNoche": 7200,
+    "disponibleDesde": "12/02/2021",
+    "disponibleHasta": "17/04/2021",
+    "reservado": "NO"
+  },
+  {
+    "codigoHotel": "SH-0002",
+    "nombre": "Sheraton",
+    "lugar/Ciudad": "Tucumán",
+    "tipoDeHabitacion": "Doble",
+    "precioPorNoche": 5790,
+    "disponibleDesde": "17/04/2021",
+    "disponibleHasta": "23/05/2021",
+    "reservado": "NO"
+  },
+  {
+    "codigoHotel": "SH-0001",
+    "nombre": "Sheraton",
+    "lugar/Ciudad": "Tucumán",
+    "tipoDeHabitacion": "Single",
+    "precioPorNoche": 4150,
+    "disponibleDesde": "02/01/2021",
+    "disponibleHasta": "19/02/2021",
+    "reservado": "NO"
+  },
+  {
+    "codigoHotel": "SE-0001",
+    "nombre": "Selina",
+    "lugar/Ciudad": "Bogotá",
+    "tipoDeHabitacion": "Single",
+    "precioPorNoche": 3900,
+    "disponibleDesde": "23/01/2021",
+    "disponibleHasta": "23/11/2021",
+    "reservado": "NO"
+  },
+  {
+    "codigoHotel": "SE-0002",
+    "nombre": "Selina",
+    "lugar/Ciudad": "Bogotá",
+    "tipoDeHabitacion": "Doble",
+    "precioPorNoche": 5840,
+    "disponibleDesde": "23/01/2021",
+    "disponibleHasta": "15/10/2021",
+    "reservado": "NO"
+  },
+  {
+    "codigoHotel": "EC-0003",
+    "nombre": "El Campín",
+    "lugar/Ciudad": "Bogotá",
+    "tipoDeHabitacion": "Triple",
+    "precioPorNoche": 7020,
+    "disponibleDesde": "15/02/2021",
+    "disponibleHasta": "27/03/2021",
+    "reservado": "NO"
+  },
+  {
+    "codigoHotel": "CP-0004",
+    "nombre": "Central Plaza",
+    "lugar/Ciudad": "Medellín",
+    "tipoDeHabitacion": "Multiple",
+    "precioPorNoche": 8600,
+    "disponibleDesde": "01/03/2021",
+    "disponibleHasta": "17/04/2021",
+    "reservado": "NO"
+  },
+  {
+    "codigoHotel": "CP-0002",
+    "nombre": "Central Plaza",
+    "lugar/Ciudad": "Medellín",
+    "tipoDeHabitacion": "Doble",
+    "precioPorNoche": 6400,
+    "disponibleDesde": "10/02/2021",
+    "disponibleHasta": "20/03/2021",
+    "reservado": "NO"
+  },
+  {
+    "codigoHotel": "BG-0004",
+    "nombre": "Bocagrande",
+    "lugar/Ciudad": "Cartagena",
+    "tipoDeHabitacion": "Multiple",
+    "precioPorNoche": 9370,
+    "disponibleDesde": "17/04/2021",
+    "disponibleHasta": "17/04/2021",
+    "reservado": "NO"
+  }
+]

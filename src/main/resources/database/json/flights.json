@@ -1,0 +1,110 @@
+[
+  {
+    "nroVuelo": "BAPI-1235",
+    "origen": "Buenos Aires",
+    "destino": "Puerto Iguazú",
+    "tipoAsiento": "Economy",
+    "precioPorPersona": 6500,
+    "fechaIda": "10/02/2021",
+    "fechaVuelta": "10/02/2021"
+  },
+  {
+    "nroVuelo": "PIBA-1420",
+    "origen": "Puerto Iguazú",
+    "destino": "Bogotá",
+    "tipoAsiento": "Business",
+    "precioPorPersona": 43200,
+    "fechaIda": "10/02/2021",
+    "fechaVuelta": "20/02/2021"
+  },
+  {
+    "nroVuelo": "PIBA-1420",
+    "origen": "Puerto Iguazú",
+    "destino": "Bogotá",
+    "tipoAsiento": "Economy",
+    "precioPorPersona": 25735,
+    "fechaIda": "20/02/2021",
+    "fechaVuelta": "21/02/2021"
+  },
+  {
+    "nroVuelo": "BATU-5536",
+    "origen": "Buenos Aires",
+    "destino": "Tucumán",
+    "tipoAsiento": "Economy",
+    "precioPorPersona": 7320,
+    "fechaIda": "10/02/2021",
+    "fechaVuelta": "17/02/2021"
+  },
+  {
+    "nroVuelo": "TUPI-3369",
+    "origen": "Tucumán",
+    "destino": "Puerto Iguazú",
+    "tipoAsiento": "Business",
+    "precioPorPersona": 12530,
+    "fechaIda": "12/02/2021",
+    "fechaVuelta": "23/02/2021"
+  },
+  {
+    "nroVuelo": "TUPI-3369",
+    "origen": "Tucumán",
+    "destino": "Puerto Iguazú",
+    "tipoAsiento": "Economy",
+    "precioPorPersona": 5400,
+    "fechaIda": "02/01/2021",
+    "fechaVuelta": "16/01/2021"
+  },
+  {
+    "nroVuelo": "BOCA-4213",
+    "origen": "Bogotá",
+    "destino": "Cartagena",
+    "tipoAsiento": "Economy",
+    "precioPorPersona": 8000,
+    "fechaIda": "23/01/2021",
+    "fechaVuelta": "5/2/2021"
+  },
+  {
+    "nroVuelo": "CAME-0321",
+    "origen": "Cartagena",
+    "destino": "Medellín",
+    "tipoAsiento": "Economy",
+    "precioPorPersona": 7800,
+    "fechaIda": "23/01/2021",
+    "fechaVuelta": "31/1/2021"
+  },
+  {
+    "nroVuelo": "BOBA-6567",
+    "origen": "Bogotá",
+    "destino": "Buenos Aires",
+    "tipoAsiento": "Business",
+    "precioPorPersona": 57000,
+    "fechaIda": "15/02/2021",
+    "fechaVuelta": "28/02/2021"
+  },
+  {
+    "nroVuelo": "BOBA-6567",
+    "origen": "Bogotá",
+    "destino": "Buenos Aires",
+    "tipoAsiento": "Economy",
+    "precioPorPersona": 39860,
+    "fechaIda": "01/03/2021",
+    "fechaVuelta": "14/03/2021"
+  },
+  {
+    "nroVuelo": "BOME-4442",
+    "origen": "Bogotá",
+    "destino": "Medellín",
+    "tipoAsiento": "Economy",
+    "precioPorPersona": 11000,
+    "fechaIda": "10/02/2021",
+    "fechaVuelta": "24/02/2021"
+  },
+  {
+    "nroVuelo": "MEPI-9986",
+    "origen": "Medellín",
+    "destino": "Puerto Iguazú",
+    "tipoAsiento": "Business",
+    "precioPorPersona": 41640,
+    "fechaIda": "24/02/2021",
+    "fechaVuelta": "02/05/2021"
+  }
+]
