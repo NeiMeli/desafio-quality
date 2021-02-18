@@ -6,8 +6,8 @@ public class HotelRoomQueryException extends RuntimeException {
     }
 
     public enum HotelRoomQueryExceptionMessage {
-        INVALID_DATE_TO("Fecha hasta invalida: %s"),
-        INVALID_DATE_FROM("Fecha desde invalida: %s");
+        INVALID_DATE_TO("La fecha de salida debe ser mayor a la de entrada"),
+        INVALID_DATE_FROM("La fecha de entrada debe ser menor a la de salida");
 
         private final String message;
 
@@ -15,8 +15,8 @@ public class HotelRoomQueryException extends RuntimeException {
             this.message = message;
         }
 
-        public String getMessage(Object ... args) {
-            return String.format(message, args);
+        public String getMessage() {
+            return message;
         }
     }
 }

@@ -30,4 +30,6 @@ public class HotelRoomController implements ExceptionHandlerController {
         return service.query(hotelRoomQuery);
     }
 
+
+
 }

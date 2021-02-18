@@ -133,13 +133,13 @@ class HotelRoomServiceImplTest {
         String invalidDateTo = "11/02/2021";
         assertThatExceptionOfType(HotelRoomQueryException.class)
                 .isThrownBy(() -> hotelRoomQuery.withDateTo(invalidDateTo))
-                .withMessageContaining(HotelRoomQueryExceptionMessage.INVALID_DATE_TO.getMessage(invalidDateTo));
+                .withMessageContaining(HotelRoomQueryExceptionMessage.INVALID_DATE_TO.getMessage());
 
         // fecha desde invalida
         hotelRoomQuery.withDateTo("14/02/2021");
         String invalidDateFrom = "14/02/2021";
         assertThatExceptionOfType(HotelRoomQueryException.class)
                 .isThrownBy(() -> hotelRoomQuery.withDateFrom(invalidDateFrom))
-                .withMessageContaining(HotelRoomQueryExceptionMessage.INVALID_DATE_FROM.getMessage(invalidDateFrom));
+                .withMessageContaining(HotelRoomQueryExceptionMessage.INVALID_DATE_FROM.getMessage());
     }
 }

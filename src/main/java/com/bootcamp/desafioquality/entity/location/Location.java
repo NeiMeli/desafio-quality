@@ -31,7 +31,7 @@ public enum Location {
     }
 
     public static class LocationNotFoundException extends BadRequestException {
-        public static final String MESSAGE = "Ubicacion %s inexistente";
+        public static final String MESSAGE = "El destino %s no existe";
         public LocationNotFoundException(String value) {
             super(String.format(MESSAGE, value));
         }

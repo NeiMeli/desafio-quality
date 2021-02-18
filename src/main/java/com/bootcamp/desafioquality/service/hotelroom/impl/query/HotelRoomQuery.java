@@ -32,7 +32,7 @@ public class HotelRoomQuery extends Query<HotelRoomQueryParam, HotelRoom> {
 
     private void validateDateTo(Date dateTo, String dateToString) {
         if (!dateToValidation.test(dateTo)) {
-            throw new HotelRoomQueryException(INVALID_DATE_TO.getMessage(dateToString));
+            throw new HotelRoomQueryException(INVALID_DATE_TO.getMessage());
         }
     }
 
@@ -48,7 +48,7 @@ public class HotelRoomQuery extends Query<HotelRoomQueryParam, HotelRoom> {
 
     private void validateDateFrom(Date dateFrom, String dateFromString) {
         if (!dateFromValidation.test(dateFrom)) {
-            throw new HotelRoomQueryException(INVALID_DATE_FROM.getMessage(dateFromString));
+            throw new HotelRoomQueryException(INVALID_DATE_FROM.getMessage());
         }
     }
 
