@@ -5,6 +5,7 @@ import com.bootcamp.desafioquality.controller.hotelroom.dto.response.HotelRoomRe
 import com.bootcamp.desafioquality.entity.hotel.HotelRoom;
 import com.bootcamp.desafioquality.repository.hotelroom.HotelRoomRepository;
 import com.bootcamp.desafioquality.service.hotelroom.HotelRoomService;
+import com.bootcamp.desafioquality.service.hotelroom.impl.query.HotelRoomQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,8 +18,9 @@ public class HotelRoomServiceImpl implements HotelRoomService {
     HotelRoomRepository repository;
 
     @Override
-    public List<HotelRoomResponseDTO> listAllAvailable() {
-        return repository.listWhere(HotelRoom::isAvailable)
+    public List<HotelRoomResponseDTO> query(HotelRoomQuery hotelRoomQuery) {
+        hotelRoomQuery.withAvailability();
+        return repository.listWhere(hotelRoomQuery.buildPredicate())
                 .map(HotelRoomResponseDTOBuilder::build)
                 .collect(Collectors.toList());
     }

@@ -37,6 +37,6 @@ public class HotelRoomCacheRespository implements HotelRoomRepository, CacheRepo
 
     @Override
     public Stream<HotelRoom> listWhere(Predicate<HotelRoom> predicate) {
-        return database.listWhere(predicate);
+        return getDatabase().listWhere(predicate);
     }
 }

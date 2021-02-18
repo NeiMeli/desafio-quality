@@ -128,4 +128,8 @@ public class HotelRoom implements Persistable<String> {
     public boolean isAvailable() {
         return !isReserved();
     }
+
+    public void reserve() {
+        this.reserved = true;
+    }
 }
