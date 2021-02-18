@@ -5,6 +5,7 @@ import com.bootcamp.desafioquality.controller.hotelroom.dto.response.HotelRoomRe
 import com.bootcamp.desafioquality.entity.hotel.HotelRoom;
 import com.bootcamp.desafioquality.repository.hotelroom.impl.HotelRoomCacheRespository;
 import com.bootcamp.desafioquality.service.hotelroom.impl.query.HotelRoomQuery;
+import com.bootcamp.desafioquality.service.hotelroom.impl.query.HotelRoomQueryException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -16,7 +17,10 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import static com.bootcamp.desafioquality.common.HotelRoomTestConstants.DATABASE;
+import static com.bootcamp.desafioquality.entity.location.Location.*;
+import static com.bootcamp.desafioquality.service.hotelroom.impl.query.HotelRoomQueryException.*;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
@@ -62,12 +66,8 @@ class HotelRoomServiceImplTest {
         when(repository.getDatabase())
                 .thenReturn(new CacheDBTableMock<>(hotelRoomList));
         when(repository.listWhere(any())).thenCallRealMethod();
-        HotelRoomQuery hotelRoomQuery = new HotelRoomQuery();
 
-        // primero testeo una query que no traiga nada
-        hotelRoomQuery.withDestinations("non-existent-destination");
-        List<HotelRoomResponseDTO> hotelRoomResponseDTOS1 = service.query(hotelRoomQuery);
-        assertThat(hotelRoomResponseDTOS1).isEmpty();
+        HotelRoomQuery hotelRoomQuery = new HotelRoomQuery();
 
         // un destino
         final String bsas = "Buenos Aires";
@@ -117,5 +117,29 @@ class HotelRoomServiceImplTest {
         List<HotelRoomResponseDTO> hotelRoomResponseDTOS8 = service.query(hotelRoomQuery);
         assertThat(hotelRoomResponseDTOS8).hasSize(2);
         assertThat(hotelRoomResponseDTOS8).allMatch(dto -> dto.getLocation().equals(bogota));
+    }
+
+    @Test
+    void testQueryBadRequests() {
+        HotelRoomQuery hotelRoomQuery = new HotelRoomQuery();
+        // ubicacion invalida
+        String invalidLocation = "non-existent-destination";
+        assertThatExceptionOfType(LocationNotFoundException.class)
+                .isThrownBy(() -> hotelRoomQuery.withDestinations(invalidLocation))
+                .withMessageContaining(LocationNotFoundException.MESSAGE, invalidLocation);
+
+        // fecha hasta invalida
+        hotelRoomQuery.withDateFrom("12/02/2021");
+        String invalidDateTo = "11/02/2021";
+        assertThatExceptionOfType(HotelRoomQueryException.class)
+                .isThrownBy(() -> hotelRoomQuery.withDateTo(invalidDateTo))
+                .withMessageContaining(HotelRoomQueryExceptionMessage.INVALID_DATE_TO.getMessage(invalidDateTo));
+
+        // fecha desde invalida
+        hotelRoomQuery.withDateTo("14/02/2021");
+        String invalidDateFrom = "14/02/2021";
+        assertThatExceptionOfType(HotelRoomQueryException.class)
+                .isThrownBy(() -> hotelRoomQuery.withDateFrom(invalidDateFrom))
+                .withMessageContaining(HotelRoomQueryExceptionMessage.INVALID_DATE_FROM.getMessage(invalidDateFrom));
     }
 }

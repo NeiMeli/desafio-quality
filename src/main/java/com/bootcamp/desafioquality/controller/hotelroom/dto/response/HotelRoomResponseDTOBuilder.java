@@ -7,6 +7,6 @@ public class HotelRoomResponseDTOBuilder {
         return new HotelRoomResponseDTO()
                 .setCode(hotelRoom.getCode())
                 .setHotelName(hotelRoom.getHotelName())
-                .setLocation(hotelRoom.getLocation());
+                .setLocation(hotelRoom.getLocation().getLabel());
     }
 }

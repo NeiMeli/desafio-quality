@@ -1,6 +1,7 @@
 package com.bootcamp.desafioquality.entity.hotel;
 
 import com.bootcamp.desafioquality.entity.Persistable;
+import com.bootcamp.desafioquality.entity.location.Location;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.jetbrains.annotations.NotNull;
 
@@ -11,7 +12,7 @@ import java.util.Date;
 public class HotelRoom implements Persistable<String> {
     private String code;
     private String hotelName;
-    private String location;
+    private Location location;
     private RoomType roomType;
     private double price;
     private Date availableFrom;
@@ -22,7 +23,7 @@ public class HotelRoom implements Persistable<String> {
         HotelRoom hotelRoom = new HotelRoom();
         hotelRoom.setCode(jn.get("codigoHotel").textValue())
                 .setHotelName(jn.get("nombre").textValue())
-                .setLocation(jn.get("lugar/Ciudad").textValue())
+                .setLocation(Location.fromLabel(jn.get("lugar/Ciudad").textValue()))
                 .setRoomType(RoomType.fromLabel(jn.get("tipoDeHabitacion").textValue()))
                 .setAvailableFrom(jn.get("disponibleDesde").textValue())
                 .setAvailableTo(jn.get("disponibleHasta").textValue())
@@ -48,11 +49,11 @@ public class HotelRoom implements Persistable<String> {
         return this;
     }
 
-    public String getLocation() {
+    public Location getLocation() {
         return location;
     }
 
-    public HotelRoom setLocation(String location) {
+    public HotelRoom setLocation(Location location) {
         this.location = location;
         return this;
     }
