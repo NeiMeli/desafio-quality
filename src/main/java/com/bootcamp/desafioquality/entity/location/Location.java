@@ -13,6 +13,11 @@ public enum Location {
     BOCAGRANDE("Bocagrande"),
     CARTAGENA("Cartagena");
 
+    public static boolean exists(String label) {
+        return Arrays.stream(values())
+                .anyMatch(v -> v.label.equalsIgnoreCase(label));
+    }
+
     public String getLabel() {
         return label;
     }

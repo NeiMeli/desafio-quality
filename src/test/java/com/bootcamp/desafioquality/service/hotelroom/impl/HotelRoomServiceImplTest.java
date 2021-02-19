@@ -108,7 +108,7 @@ class HotelRoomServiceImplTest {
         // solo hasta
         hotelRoomQuery.withoutDateFrom();
         List<HotelRoomResponseDTO> hotelRoomResponseDTOS7 = service.query(hotelRoomQuery);
-        assertThat(hotelRoomResponseDTOS7).hasSize(5);
+        assertThat(hotelRoomResponseDTOS7).hasSize(4);
 
         // agrego desde y tambien ubicacion
         final String bogota = "Bogotá";
@@ -117,6 +117,17 @@ class HotelRoomServiceImplTest {
         List<HotelRoomResponseDTO> hotelRoomResponseDTOS8 = service.query(hotelRoomQuery);
         assertThat(hotelRoomResponseDTOS8).hasSize(2);
         assertThat(hotelRoomResponseDTOS8).allMatch(dto -> dto.getLocation().equals(bogota));
+
+        // con un hasta muy en el futuro, no debería traerme nada
+        hotelRoomQuery.withDateTo("17/08/2040");
+        List<HotelRoomResponseDTO> hotelRoomResponseDTOS9 = service.query(hotelRoomQuery);
+        assertThat(hotelRoomResponseDTOS9).isEmpty();
+        hotelRoomQuery.withoutDateTo();
+
+        // con un desde muy en el futuro, no debería traerme nada
+        hotelRoomQuery.withDateFrom("17/08/2040");
+        List<HotelRoomResponseDTO> hotelRoomResponseDTOS10 = service.query(hotelRoomQuery);
+        assertThat(hotelRoomResponseDTOS10).isEmpty();
     }
 
     @Test

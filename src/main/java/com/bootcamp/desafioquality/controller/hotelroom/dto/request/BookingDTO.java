@@ -7,7 +7,7 @@ public class BookingDTO {
     private String dateTo;
     private String destination;
     private String hotelCode;
-    private Integer peopleAmount;
+    private String peopleAmount;
     private String roomType;
     private List<PersonDTO> people;
     private PaymentMethodDTO paymentMethod;
@@ -48,11 +48,11 @@ public class BookingDTO {
         return this;
     }
 
-    public Integer getPeopleAmount() {
+    public String getPeopleAmount() {
         return peopleAmount;
     }
 
-    public BookingDTO setPeopleAmount(Integer peopleAmount) {
+    public BookingDTO setPeopleAmount(String peopleAmount) {
         this.peopleAmount = peopleAmount;
         return this;
     }
