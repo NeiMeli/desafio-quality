@@ -10,6 +10,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
@@ -38,5 +39,10 @@ public class HotelRoomCacheRespository implements HotelRoomRepository, CacheRepo
     @Override
     public Stream<HotelRoom> listWhere(Predicate<HotelRoom> predicate) {
         return getDatabase().listWhere(predicate);
+    }
+
+    @Override
+    public Optional<HotelRoom> find(String code) {
+        return getDatabase().find(code);
     }
 }

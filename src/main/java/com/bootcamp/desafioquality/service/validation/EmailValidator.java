@@ -1,6 +1,5 @@
 package com.bootcamp.desafioquality.service.validation;
 
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class EmailValidator {

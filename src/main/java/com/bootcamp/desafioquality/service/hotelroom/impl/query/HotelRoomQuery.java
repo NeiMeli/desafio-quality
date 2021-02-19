@@ -18,6 +18,8 @@ import static com.bootcamp.desafioquality.service.hotelroom.impl.query.HotelRoom
 
 public class HotelRoomQuery extends Query<HotelRoomQueryParam, HotelRoom> {
     private final DateRangeValidator dateRangeValidator;
+    private Date dateFrom = null;
+    private Date dateTo = null;
 
     public HotelRoomQuery() {
         this.dateRangeValidator = new DateRangeValidator(HotelRoomQueryException::new);
@@ -28,7 +30,7 @@ public class HotelRoomQuery extends Query<HotelRoomQueryParam, HotelRoom> {
         if (dateTo != null) {
             Date date = DateParser.fromString(dateTo);
             dateRangeValidator.validateDateTo(date);
-            this.filters.put(DATE_TO, betweenAvailabilityRange(date));
+            this.dateTo = date;
         }
         return this;
     }
@@ -43,7 +45,7 @@ public class HotelRoomQuery extends Query<HotelRoomQueryParam, HotelRoom> {
         if (dateFrom != null) {
             Date date = DateParser.fromString(dateFrom);
             dateRangeValidator.validateDateFrom(date);
-            this.filters.put(DATE_FROM, betweenAvailabilityRange(date));
+            this.dateFrom = date;
         }
         return this;
     }
@@ -56,27 +58,41 @@ public class HotelRoomQuery extends Query<HotelRoomQueryParam, HotelRoom> {
         return this;
     }
 
-    public HotelRoomQuery withAvailability() {
-        filters.put(AVAILABILITY, HotelRoom::isAvailable);
+    public HotelRoomQuery withAnyAvailability() {
+        filters.put(AVAILABILITY, HotelRoom::hasDatesAvailable);
         return this;
     }
 
     public HotelRoomQuery withoutDestinations() {
-
         filters.remove(DESTINATION);
         return this;
     }
 
     public HotelRoomQuery withoutDateTo() {
-        filters.remove(DATE_TO);
+        this.dateTo = null;
         dateRangeValidator.withoutDateTo();
         return this;
     }
 
 
     public HotelRoomQuery withoutDateFrom() {
-        filters.remove(DATE_FROM);
+        this.dateFrom = null;
         dateRangeValidator.withoutDateFrom();
         return this;
+    }
+
+    @Override
+    public Predicate<HotelRoom> buildPredicate() {
+        return hr -> {
+            Predicate<HotelRoom> pr = super.buildPredicate();
+            if (dateFrom != null && dateTo != null) {
+                return pr.test(hr) && hr.hasRangeAvailable(dateFrom, dateTo);
+            } else {
+                if (dateFrom != null)
+                    return pr.test(hr) && hr.hasDateAvailable(dateFrom);
+                else if (dateTo != null) return pr.test(hr) && hr.hasDateAvailable(dateTo);
+                else return pr.test(hr);
+            }
+        };
     }
 }

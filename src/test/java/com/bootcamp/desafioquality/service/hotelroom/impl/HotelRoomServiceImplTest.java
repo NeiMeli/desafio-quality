@@ -1,11 +1,17 @@
 package com.bootcamp.desafioquality.service.hotelroom.impl;
 
 import com.bootcamp.desafioquality.common.CacheDBTableMock;
+import com.bootcamp.desafioquality.common.HotelRoomTestConstants;
+import com.bootcamp.desafioquality.controller.common.dto.response.StatusCodeDTO;
 import com.bootcamp.desafioquality.controller.hotelroom.dto.request.BookingDTO;
 import com.bootcamp.desafioquality.controller.hotelroom.dto.request.HotelRoomBookingRequestDTO;
 import com.bootcamp.desafioquality.controller.hotelroom.dto.request.PaymentMethodDTO;
 import com.bootcamp.desafioquality.controller.hotelroom.dto.request.PersonDTO;
+import com.bootcamp.desafioquality.controller.hotelroom.dto.response.HotelRoomBookingResponseDTO;
+import com.bootcamp.desafioquality.controller.hotelroom.dto.response.HotelRoomBookingResponseDTOBuilder;
 import com.bootcamp.desafioquality.controller.hotelroom.dto.response.HotelRoomResponseDTO;
+import com.bootcamp.desafioquality.date.DateParser;
+import com.bootcamp.desafioquality.date.DateRange;
 import com.bootcamp.desafioquality.date.DateRangeValidator;
 import com.bootcamp.desafioquality.entity.hotel.HotelRoom;
 import com.bootcamp.desafioquality.entity.hotel.RoomType;
@@ -19,9 +25,11 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.HttpStatus;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -36,6 +44,7 @@ import static com.bootcamp.desafioquality.service.validation.ServiceValidationEr
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
@@ -62,7 +71,7 @@ class HotelRoomServiceImplTest {
         List<String> reservedRooms = new ArrayList<>();
         IntStream.range(0, 4).forEach(index -> {
             HotelRoom hotelRoom = hotelRoomList.get(index);
-            hotelRoom.reserve();
+            hotelRoom.reserve(hotelRoom.getNextAvailableRange().getDateFrom(), hotelRoom.getNextAvailableRange().getDateTo());
             reservedRooms.add(hotelRoom.getCode());
         });
 
@@ -100,7 +109,10 @@ class HotelRoomServiceImplTest {
         // si los reservo, no tienen que aparecer
         List<String> codes = hotelRoomResponseDTOS3.stream().map(HotelRoomResponseDTO::getCode).collect(Collectors.toList());
         hotelRoomList.stream().filter(hr -> codes.contains(hr.getCode()))
-                .forEach(HotelRoom::reserve);
+                .forEach(hr -> {
+                    DateRange nextAvailableRange = hr.getNextAvailableRange();
+                    hr.reserve(nextAvailableRange.getDateFrom(), nextAvailableRange.getDateTo());
+                });
         List<HotelRoomResponseDTO> hotelRoomResponseDTOS4 = service.query(hotelRoomQuery);
         assertThat(hotelRoomResponseDTOS4).isEmpty();
 
@@ -131,6 +143,51 @@ class HotelRoomServiceImplTest {
         List<HotelRoomResponseDTO> hotelRoomResponseDTOS8 = service.query(hotelRoomQuery);
         assertThat(hotelRoomResponseDTOS8).hasSize(2);
         assertThat(hotelRoomResponseDTOS8).allMatch(dto -> dto.getLocation().equals(bogota));
+
+        // hago una reserva parcial de uno, el from deberia seguir trayendo resultados
+        hotelRoomList.stream()
+                .filter(hr -> hr.getCode().equals("SE-0001"))
+                .findFirst()
+                .orElseThrow()
+                .reserve(DateParser.fromString("14/06/2021"), DateParser.fromString( "15/07/2021"));
+        List<HotelRoomResponseDTO> hotelRoomResponseDTOS8_2 = service.query(hotelRoomQuery);
+        assertThat(hotelRoomResponseDTOS8_2).hasSize(2);
+        assertThat(hotelRoomResponseDTOS8_2).anyMatch(hr -> hr.getCode().equals("SE-0001"));
+
+        // pero si pongo el to dentro del rango que reserve, ya no me lo va a encontrar
+        hotelRoomQuery.withDateTo("28/06/2021");
+        List<HotelRoomResponseDTO> hotelRoomResponseDTOS8_3 = service.query(hotelRoomQuery);
+        assertThat(hotelRoomResponseDTOS8_3).noneMatch(hr -> hr.getCode().equals("SE-0001"));
+
+        // incluso si el to es posterior, la reserva en el medio me lo inhabilita
+        hotelRoomQuery.withDateTo("28/08/2021");
+        List<HotelRoomResponseDTO> hotelRoomResponseDTOS8_4 = service.query(hotelRoomQuery);
+        assertThat(hotelRoomResponseDTOS8_4).noneMatch(hr -> hr.getCode().equals("SE-0001"));
+
+        // ahora si saco el from, el to que habia puesto me lo hace posible
+        hotelRoomQuery.withoutDateFrom();
+        List<HotelRoomResponseDTO> hotelRoomResponseDTOS8_5 = service.query(hotelRoomQuery);
+        assertThat(hotelRoomResponseDTOS8_5).anyMatch(hr -> hr.getCode().equals("SE-0001"));
+
+        // si pongo el from dentro del rango reservado, otra vez no obtengo nada
+        hotelRoomQuery.withDateFrom("28/06/2021");
+        List<HotelRoomResponseDTO> hotelRoomResponseDTOS8_6 = service.query(hotelRoomQuery);
+        assertThat(hotelRoomResponseDTOS8_6).noneMatch(hr -> hr.getCode().equals("SE-0001"));
+
+        // saco el to, pero aun asi no esta disponible en esa fecha
+        hotelRoomQuery.withoutDateTo();
+        List<HotelRoomResponseDTO> hotelRoomResponseDTOS8_7 = service.query(hotelRoomQuery);
+        assertThat(hotelRoomResponseDTOS8_7).noneMatch(hr -> hr.getCode().equals("SE-0001"));
+
+        // muevo el from para adelante, obtengo resultados
+        hotelRoomQuery.withDateFrom("28/08/2021");
+        List<HotelRoomResponseDTO> hotelRoomResponseDTOS8_8 = service.query(hotelRoomQuery);
+        assertThat(hotelRoomResponseDTOS8_8).anyMatch(hr -> hr.getCode().equals("SE-0001"));
+
+        // le agrego un to mas adelante, obtengo resultados
+        hotelRoomQuery.withDateTo("10/09/2021");
+        List<HotelRoomResponseDTO> hotelRoomResponseDTOS8_9 = service.query(hotelRoomQuery);
+        assertThat(hotelRoomResponseDTOS8_9).anyMatch(hr -> hr.getCode().equals("SE-0001"));
 
         // con un hasta muy en el futuro, no debería traerme nada
         hotelRoomQuery.withDateTo("17/08/2040");
@@ -276,5 +333,68 @@ class HotelRoomServiceImplTest {
         pmErrorAsserter.accept(PaymentMethodType.PaymentMethodTypeError.INVALID_INSTALLMENT_AMOUNT.getMsg(-1));
         paymentMethodDTO.setDues(7);
         pmErrorAsserter.accept(PaymentMethodType.PaymentMethodTypeError.INVALID_INSTALLMENT_AMOUNT.getMsg(7));
+        paymentMethodDTO.setDues(3);
+
+        List<HotelRoom> hotelRoomList = DATABASE.get();
+        when(repository.getDatabase())
+                .thenReturn(new CacheDBTableMock<>(hotelRoomList));
+        when(repository.listWhere(any())).thenCallRealMethod();
+
+        // codigo de hotel
+        // nulo
+        exceptionAsserter.accept(EMPTY_HOTEL_CODE.getMessage());
+        // inexistente
+        bookingDTO.setHotelCode("not-a-hotel-room");
+        exceptionAsserter.accept(HOTEL_ROOM_NOT_FOUND.getMessage("not-a-hotel-room"));
+    }
+
+    @Test
+    void testBookingHappy() {
+        List<HotelRoom> hotelRoomList = DATABASE.get();
+        when(repository.getDatabase())
+                .thenReturn(new CacheDBTableMock<>(hotelRoomList));
+        when(repository.find(anyString())).thenCallRealMethod();
+
+        HotelRoomBookingRequestDTO request = HotelRoomTestConstants.VALID_BOOKING_REQUEST.get();
+        HotelRoomBookingResponseDTO response = service.bookHotelRoom(request);
+        StatusCodeDTO statusCode = response.getStatusCode();
+        assertThat(statusCode.getCode()).isEqualTo(HttpStatus.OK.value());
+        assertThat(statusCode.getMessage()).isEqualTo(HotelRoomBookingResponseDTOBuilder.SUCCESS_MESSAGE);
+
+        assertThat(response.getAmount()).isEqualTo(390000d);
+        assertThat(response.getInterest()).isEqualTo(20d);
+        assertThat(response.getTotal()).isEqualTo(468000d);
+
+        // tengo que asgurarme que la habitacion quedó sin disponibilidad en esa fecha
+        HotelRoom hotelRoom = repository.find(request.getBooking().getHotelCode()).orElseThrow();
+        assertThat(hotelRoom.hasRangeAvailable(DateParser.fromString(request.getBooking().getDateFrom()), DateParser.fromString(request.getBooking().getDateTo()))).isFalse();
+        // si hago el mismo request, va a dar error
+        HotelRoomBookingResponseDTO response2 = service.bookHotelRoom(request);
+        StatusCodeDTO statusCode2 = response2.getStatusCode();
+        assertThat(statusCode2.getCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+        assertThat(statusCode2.getMessage()).isEqualTo(RoomNotAvailableException.MESSAGE);
+
+        assertThat(response2.getAmount()).isNull();
+        assertThat(response2.getInterest()).isNull();
+        assertThat(response2.getTotal()).isNull();
+    }
+
+    @Test
+    void testBookingRoomNotAvailable() {
+        List<HotelRoom> hotelRoomList = DATABASE.get();
+        when(repository.getDatabase())
+                .thenReturn(new CacheDBTableMock<>(hotelRoomList));
+        when(repository.find(anyString())).thenCallRealMethod();
+
+        HotelRoomBookingRequestDTO request = HotelRoomTestConstants.VALID_BOOKING_REQUEST.get();
+        request.getBooking().setDateTo("27/07/2050");
+        HotelRoomBookingResponseDTO response = service.bookHotelRoom(request);
+        StatusCodeDTO statusCode = response.getStatusCode();
+        assertThat(statusCode.getCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+        assertThat(statusCode.getMessage()).isEqualTo(RoomNotAvailableException.MESSAGE);
+
+        assertThat(response.getAmount()).isNull();
+        assertThat(response.getInterest()).isNull();
+        assertThat(response.getTotal()).isNull();
     }
 }

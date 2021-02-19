@@ -1,5 +1,7 @@
 package com.bootcamp.desafioquality.entity.hotel;
 
+import com.bootcamp.desafioquality.date.DateParser;
+import com.bootcamp.desafioquality.date.DateRange;
 import com.bootcamp.desafioquality.entity.Persistable;
 import com.bootcamp.desafioquality.entity.location.Location;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -17,7 +19,7 @@ public class HotelRoom implements Persistable<String> {
     private double price;
     private Date availableFrom;
     private Date availableTo;
-    private boolean reserved;
+    private HotelRoomSchedule schedule;
 
     public static HotelRoom fromJson(JsonNode jn) {
         HotelRoom hotelRoom = new HotelRoom();
@@ -25,9 +27,10 @@ public class HotelRoom implements Persistable<String> {
                 .setHotelName(jn.get("nombre").textValue())
                 .setLocation(Location.fromLabel(jn.get("lugar/Ciudad").textValue()))
                 .setRoomType(RoomType.fromLabel(jn.get("tipoDeHabitacion").textValue()))
-                .setAvailableFrom(jn.get("disponibleDesde").textValue())
-                .setAvailableTo(jn.get("disponibleHasta").textValue())
-                .setReserved(ReservedBooleanMapping.fromLabel(jn.get("reservado").textValue()));
+                .setPrice(jn.get("precioPorNoche").doubleValue());
+        Date avlFrom = DateParser.fromString(jn.get("disponibleDesde").textValue());
+        Date avlTo = DateParser.fromString(jn.get("disponibleHasta").textValue());
+        hotelRoom.schedule = new HotelRoomSchedule(avlFrom, avlTo);
         return hotelRoom;
     }
 
@@ -102,15 +105,6 @@ public class HotelRoom implements Persistable<String> {
         return this;
     }
 
-    public boolean isReserved() {
-        return reserved;
-    }
-
-    public HotelRoom setReserved(boolean reserved) {
-        this.reserved = reserved;
-        return this;
-    }
-
     @Override
     public String getPrimaryKey() {
         return this.code;
@@ -126,11 +120,23 @@ public class HotelRoom implements Persistable<String> {
         setCode(id);
     }
 
-    public boolean isAvailable() {
-        return !isReserved();
+    public boolean hasRangeAvailable(@NotNull Date dateFrom, @NotNull Date dateTo) {
+        return schedule.isRangeAvailable(dateFrom, dateTo);
     }
 
-    public void reserve() {
-        this.reserved = true;
+    public boolean hasDateAvailable(@NotNull Date dateFrom) {
+        return schedule.isDateAvailable(dateFrom);
+    }
+
+    public boolean hasDatesAvailable() {
+        return schedule.hasDatesAvailable();
+    }
+
+    public void reserve(@NotNull Date dateFrom, @NotNull Date dateTo) {
+        schedule.reserveRange(dateFrom, dateTo);
+    }
+
+    public DateRange getNextAvailableRange() {
+        return schedule.getNextAvailableRange();
     }
 }

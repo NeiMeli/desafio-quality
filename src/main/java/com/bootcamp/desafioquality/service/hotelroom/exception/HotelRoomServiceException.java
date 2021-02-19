@@ -1,6 +1,8 @@
 package com.bootcamp.desafioquality.service.hotelroom.exception;
 
-public class HotelRoomServiceException extends RuntimeException {
+import com.bootcamp.desafioquality.exception.BadRequestException;
+
+public class HotelRoomServiceException extends BadRequestException {
 
     public HotelRoomServiceException(String msg) {
         super(msg);

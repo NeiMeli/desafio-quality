@@ -6,6 +6,7 @@ import org.jetbrains.annotations.Nullable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 
 public class DateParser {
@@ -22,5 +23,12 @@ public class DateParser {
         } catch (Exception e) {
             throw exSupplier.apply(String.format(ERROR_MESSAGE, dateString));
         }
+    }
+
+    public static int getDaysBetween(String dateFrom, String dateTo) {
+        Date from = fromString(dateFrom);
+        Date to = fromString(dateTo);
+        long diffInMillies = Math.abs(from.getTime() - to.getTime());
+        return (int) TimeUnit.DAYS.convert(diffInMillies, TimeUnit.MILLISECONDS);
     }
 }

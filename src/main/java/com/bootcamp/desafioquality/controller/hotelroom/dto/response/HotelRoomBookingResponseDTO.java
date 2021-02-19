@@ -5,9 +5,9 @@ import com.bootcamp.desafioquality.controller.hotelroom.dto.request.BookingDTO;
 
 public class HotelRoomBookingResponseDTO {
     private String userName;
-    private double amount;
-    private double interest;
-    private double total;
+    private Double amount;
+    private Double interest;
+    private Double total;
     private BookingDTO booking;
     private StatusCodeDTO statusCode;
 
@@ -20,7 +20,7 @@ public class HotelRoomBookingResponseDTO {
         return this;
     }
 
-    public double getAmount() {
+    public Double getAmount() {
         return amount;
     }
 
@@ -29,7 +29,7 @@ public class HotelRoomBookingResponseDTO {
         return this;
     }
 
-    public double getInterest() {
+    public Double getInterest() {
         return interest;
     }
 
@@ -38,7 +38,7 @@ public class HotelRoomBookingResponseDTO {
         return this;
     }
 
-    public double getTotal() {
+    public Double getTotal() {
         return total;
     }
 

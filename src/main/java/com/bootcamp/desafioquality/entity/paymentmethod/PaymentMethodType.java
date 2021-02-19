@@ -1,5 +1,6 @@
 package com.bootcamp.desafioquality.entity.paymentmethod;
 
+import com.bootcamp.desafioquality.exception.BadRequestException;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
@@ -63,7 +64,7 @@ public enum PaymentMethodType {
         return label;
     }
 
-    public static class PaymentMethodTypeException extends RuntimeException {
+    public static class PaymentMethodTypeException extends BadRequestException {
         public PaymentMethodTypeException(String message) {
             super(message);
         }
