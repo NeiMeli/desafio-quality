@@ -11,6 +11,10 @@ public enum RoomType {
     TRIPLE ("Triple", 3),
     MULTIPLE("Multiple", Integer.MAX_VALUE);
 
+    public String getLabel() {
+        return label;
+    }
+
     private final String label;
     private final int capacity;
 

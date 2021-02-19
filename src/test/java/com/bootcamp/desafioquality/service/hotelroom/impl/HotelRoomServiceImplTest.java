@@ -1,11 +1,20 @@
 package com.bootcamp.desafioquality.service.hotelroom.impl;
 
 import com.bootcamp.desafioquality.common.CacheDBTableMock;
+import com.bootcamp.desafioquality.controller.hotelroom.dto.request.BookingDTO;
+import com.bootcamp.desafioquality.controller.hotelroom.dto.request.HotelRoomBookingRequestDTO;
+import com.bootcamp.desafioquality.controller.hotelroom.dto.request.PaymentMethodDTO;
+import com.bootcamp.desafioquality.controller.hotelroom.dto.request.PersonDTO;
 import com.bootcamp.desafioquality.controller.hotelroom.dto.response.HotelRoomResponseDTO;
+import com.bootcamp.desafioquality.date.DateRangeValidator;
 import com.bootcamp.desafioquality.entity.hotel.HotelRoom;
+import com.bootcamp.desafioquality.entity.hotel.RoomType;
+import com.bootcamp.desafioquality.entity.paymentmethod.PaymentMethodType;
 import com.bootcamp.desafioquality.repository.hotelroom.impl.HotelRoomCacheRespository;
+import com.bootcamp.desafioquality.service.hotelroom.exception.HotelRoomServiceException;
 import com.bootcamp.desafioquality.service.hotelroom.impl.query.HotelRoomQuery;
 import com.bootcamp.desafioquality.service.hotelroom.impl.query.HotelRoomQueryException;
+import com.bootcamp.desafioquality.service.validation.ServiceValidationError;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -13,12 +22,17 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import static com.bootcamp.desafioquality.common.HotelRoomTestConstants.DATABASE;
-import static com.bootcamp.desafioquality.entity.location.Location.*;
-import static com.bootcamp.desafioquality.service.hotelroom.impl.query.HotelRoomQueryException.*;
+import static com.bootcamp.desafioquality.date.DateParser.ERROR_MESSAGE;
+import static com.bootcamp.desafioquality.entity.location.Location.BOGOTA;
+import static com.bootcamp.desafioquality.entity.location.Location.LocationNotFoundException;
+import static com.bootcamp.desafioquality.service.hotelroom.exception.HotelRoomServiceError.*;
+import static com.bootcamp.desafioquality.service.hotelroom.impl.query.HotelRoomQueryException.HotelRoomQueryExceptionMessage;
+import static com.bootcamp.desafioquality.service.validation.ServiceValidationError.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.mockito.ArgumentMatchers.any;
@@ -152,5 +166,115 @@ class HotelRoomServiceImplTest {
         assertThatExceptionOfType(HotelRoomQueryException.class)
                 .isThrownBy(() -> hotelRoomQuery.withDateFrom(invalidDateFrom))
                 .withMessageContaining(HotelRoomQueryExceptionMessage.INVALID_DATE_FROM.getMessage());
+    }
+
+    @Test
+    void testBookingBadRequests() {
+        HotelRoomBookingRequestDTO invalidRequest = new HotelRoomBookingRequestDTO();
+        Consumer<String> exceptionAsserter = message ->
+                assertThatExceptionOfType(HotelRoomServiceException.class)
+                .isThrownBy(() -> service.bookHotelRoom(invalidRequest))
+                .withMessageContaining(message);
+        // mail invalido
+        exceptionAsserter.accept(INVALID_MAIL_FORMAT.getMessage());
+        invalidRequest.setUserName("email@gmail.com");
+
+        // Booking nulo
+        exceptionAsserter.accept(EMPTY_BOOKING.getMessage());
+        invalidRequest.setBooking(new BookingDTO());
+
+        final String nullString = "null";
+        // fechas invalidas
+        // nulos
+        BookingDTO bookingDTO = invalidRequest.getBooking();
+        exceptionAsserter.accept(String.format(ERROR_MESSAGE, nullString));
+        bookingDTO.setDateFrom("04/03/2021");
+        // el to sigue siendo nulo
+        exceptionAsserter.accept(String.format(ERROR_MESSAGE, nullString));
+
+        // rango invalido
+        bookingDTO.setDateTo("03/03/2021");
+        exceptionAsserter.accept(DateRangeValidator.DateRangeError.INVALID_DATE_TO.getMessage());
+        bookingDTO.setDateTo("04/04/2021");
+        bookingDTO.setDateFrom("05/04/2021");
+        exceptionAsserter.accept(DateRangeValidator.DateRangeError.INVALID_DATE_TO.getMessage()); // todo mismo mensaje
+        bookingDTO.setDateFrom("04/03/2021");
+
+        // Destino invalido
+        // nulo
+        exceptionAsserter.accept(String.format(LocationNotFoundException.MESSAGE, nullString));
+        // invalido
+        bookingDTO.setDestination("non-existent-destination");
+        exceptionAsserter.accept(String.format(LocationNotFoundException.MESSAGE, "non-existent-destination"));
+        bookingDTO.setDestination(BOGOTA.getLabel());
+
+        // cdad de personas
+        // lista de personas vacia
+        exceptionAsserter.accept(EMPTY_PEOPLE_LIST.getMessage());
+        bookingDTO.setPeople(new ArrayList<>());
+        exceptionAsserter.accept(EMPTY_PEOPLE_LIST.getMessage());
+        bookingDTO.getPeople().add(new PersonDTO());
+
+        // cdad nula
+        exceptionAsserter.accept(EMPTY_PEOPLE_AMOUNT.getMessage());
+        // tipo de dato invalido
+        bookingDTO.setPeopleAmount("not-an-int");
+        exceptionAsserter.accept(INVALID_PEOPLE_AMOUNT_TYPE.getMessage());
+        bookingDTO.setPeopleAmount("5.5");
+        exceptionAsserter.accept(INVALID_PEOPLE_AMOUNT_TYPE.getMessage());
+        // numero entero invalido
+        bookingDTO.setPeopleAmount("0");
+        exceptionAsserter.accept(INVALID_PEOPLE_AMOUNT.getMessage(0));
+        bookingDTO.setPeopleAmount("-1");
+        exceptionAsserter.accept(INVALID_PEOPLE_AMOUNT.getMessage(-1));
+        // indica 2 y la lista tiene 1
+        bookingDTO.setPeopleAmount("2");
+        exceptionAsserter.accept(PEOPLE_AMOUNT_AND_PEOPLE_LIST_SIZE_MISMATCH.getMessage());
+        bookingDTO.getPeople().add(new PersonDTO());
+
+        // tipo de habitacion
+        // nula
+        exceptionAsserter.accept(EMPTY_ROOM_TYPE.getMessage());
+        // invalida
+        bookingDTO.setRoomType("not-a-room-type");
+        exceptionAsserter.accept(String.format(RoomType.RoomTypeNotFoundException.MESSAGE, "not-a-room-type"));
+
+        // no tiene capacidad para las personas indicadas (por ahora 2)
+        bookingDTO.setRoomType(RoomType.SINGLE.getLabel());
+        exceptionAsserter.accept(INVALID_ROOM_TYPE.getMessage());
+        bookingDTO.setRoomType(RoomType.DOBLE.getLabel());
+
+        // Medio de pago
+        // nulo
+        exceptionAsserter.accept(ServiceValidationError.EMPTY_PAYMENT_METHOD.getMessage());
+        // no tiene numero
+        PaymentMethodDTO paymentMethodDTO = new PaymentMethodDTO();
+        bookingDTO.setPaymentMethod(paymentMethodDTO);
+        exceptionAsserter.accept(ServiceValidationError.EMPTY_CARD_NUMBER.getMessage());
+        paymentMethodDTO.setNumber("1234");
+        // no tiene tipo
+        exceptionAsserter.accept(ServiceValidationError.EMPTY_PAYMENT_METHOD_TYPE.getMessage());
+        // tipo invalido
+        paymentMethodDTO.setType("not-a-pm-type");
+        exceptionAsserter.accept(PaymentMethodType.PaymentMethodTypeError.PAYMENT_METHOD_TYPE_NOT_FOUND.getMsg("not-a-pm-type"));
+        paymentMethodDTO.setType(PaymentMethodType.DEBIT.getLabel());
+        // no tiene cuotas
+        exceptionAsserter.accept(EMPTY_INSTALLMENTS.getMessage());
+        paymentMethodDTO.setDues(3);
+
+        Consumer<String> pmErrorAsserter = message ->
+                assertThatExceptionOfType(PaymentMethodType.PaymentMethodTypeException.class)
+                        .isThrownBy(() -> service.bookHotelRoom(invalidRequest))
+                        .withMessageContaining(message);
+        // no puede haber cuotas para ese medio de pago
+        pmErrorAsserter.accept(PaymentMethodType.PaymentMethodTypeError.INSTALLMENTS_NOT_ALLOWED.getMsg());
+        // numero de cuotas invalido
+        paymentMethodDTO.setType(PaymentMethodType.CREDIT.getLabel());
+        paymentMethodDTO.setDues(0);
+        pmErrorAsserter.accept(PaymentMethodType.PaymentMethodTypeError.INVALID_INSTALLMENT_AMOUNT.getMsg(0));
+        paymentMethodDTO.setDues(-1);
+        pmErrorAsserter.accept(PaymentMethodType.PaymentMethodTypeError.INVALID_INSTALLMENT_AMOUNT.getMsg(-1));
+        paymentMethodDTO.setDues(7);
+        pmErrorAsserter.accept(PaymentMethodType.PaymentMethodTypeError.INVALID_INSTALLMENT_AMOUNT.getMsg(7));
     }
 }

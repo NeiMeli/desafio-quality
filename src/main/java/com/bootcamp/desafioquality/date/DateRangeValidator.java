@@ -24,7 +24,7 @@ public class DateRangeValidator {
 
     public DateRangeValidator validateDateFrom(Date dateFrom) {
         if (!dateFromValidation.test(dateFrom)) {
-            throw exceptionSupplier.apply(INVALID_DATE_FROM.getMsg());
+            throw exceptionSupplier.apply(INVALID_DATE_FROM.getMessage());
         }
         this.dateFrom = dateFrom;
         dateToValidation = dateTo -> this.dateFrom.compareTo(dateTo) < 0;
@@ -33,7 +33,7 @@ public class DateRangeValidator {
 
     public DateRangeValidator validateDateTo(Date dateTo) {
         if (!dateToValidation.test(dateTo)) {
-            throw exceptionSupplier.apply(INVALID_DATE_TO.getMsg());
+            throw exceptionSupplier.apply(INVALID_DATE_TO.getMessage());
         }
         this.dateTo = dateTo;
         dateFromValidation = dateFrom -> this.dateTo.compareTo(dateFrom) > 0;
@@ -55,7 +55,7 @@ public class DateRangeValidator {
         INVALID_DATE_TO("La fecha de salida debe ser mayor a la de entrada"),
         INVALID_DATE_FROM("La fecha de entrada debe ser menor a la de salida");
 
-        public String getMsg() {
+        public String getMessage() {
             return msg;
         }
 

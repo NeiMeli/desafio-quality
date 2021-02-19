@@ -18,7 +18,8 @@ public enum PaymentMethodType {
         return interest.get();
     }),
     DEBIT ("DEBIT", i -> {
-        throw new PaymentMethodTypeException(PaymentMethodTypeError.INSTALLMENTS_NOT_ALLOWED.getMsg());
+        if (i != 1) throw new PaymentMethodTypeException(PaymentMethodTypeError.INSTALLMENTS_NOT_ALLOWED.getMsg());
+        return 0d;
     });
 
     private static final Map<Integer, Double> interestByInstallments = new HashMap<>();
@@ -56,6 +57,10 @@ public enum PaymentMethodType {
 
     private static Optional<Double> resolveInterest(int installments) {
         return Optional.ofNullable(interestByInstallments.get(installments));
+    }
+
+    public String getLabel() {
+        return label;
     }
 
     public static class PaymentMethodTypeException extends RuntimeException {
