@@ -1,4 +1,4 @@
-package com.bootcamp.desafioquality.service.hotelroom.impl;
+package com.bootcamp.desafioquality.service.hotelroom.impl.validatedfields;
 
 import com.bootcamp.desafioquality.controller.hotelroom.dto.request.BookingDTO;
 import com.bootcamp.desafioquality.controller.hotelroom.dto.request.HotelRoomBookingRequestDTO;
@@ -6,24 +6,24 @@ import com.bootcamp.desafioquality.controller.hotelroom.dto.request.PersonDTO;
 import com.bootcamp.desafioquality.entity.hotel.RoomType;
 import com.bootcamp.desafioquality.entity.location.Location;
 import com.bootcamp.desafioquality.service.hotelroom.exception.HotelRoomServiceException;
-import com.bootcamp.desafioquality.service.validation.ServiceValidationError;
-import com.bootcamp.desafioquality.service.validation.ValidatedFieldsProvider;
-import com.bootcamp.desafioquality.service.validation.ValidatedFields;
+import com.bootcamp.desafioquality.service.validation.error.FieldProcessorError;
+import com.bootcamp.desafioquality.service.validation.processor.CommonValidFieldsProcessor;
+import com.bootcamp.desafioquality.service.validation.fields.CommonValidFields;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
 import static com.bootcamp.desafioquality.service.hotelroom.exception.HotelRoomServiceError.*;
 
-public class HotelRoomValidatedFieldsProvider extends ValidatedFieldsProvider {
-    private final HotelRoomValidatedFields validatedFields;
-    public HotelRoomValidatedFieldsProvider() {
+public class HotelRoomValidatedFieldsProcessor extends CommonValidFieldsProcessor {
+    private final HotelRoomValidFields validatedFields;
+    public HotelRoomValidatedFieldsProcessor() {
         super(HotelRoomServiceException::new);
-        this.validatedFields = new HotelRoomValidatedFields(HotelRoomServiceException::new);
+        this.validatedFields = new HotelRoomValidFields(HotelRoomServiceException::new);
     }
 
     @Override
-    protected ValidatedFields getValidatedFields() {
+    protected CommonValidFields getValidatedFields() {
         return this.validatedFields;
     }
 
@@ -62,14 +62,15 @@ public class HotelRoomValidatedFieldsProvider extends ValidatedFieldsProvider {
         validateLocation(bookingDTO.getDestination());
         List<PersonDTO> people = bookingDTO.getPeople();
         if (people == null || people.isEmpty()) {
-            throw exceptionSupplier.apply(ServiceValidationError.EMPTY_PEOPLE_LIST.getMessage());
+            throw exceptionSupplier.apply(FieldProcessorError.EMPTY_PEOPLE_LIST.getMessage());
         }
         validatePeopleAmount(bookingDTO.getPeopleAmount(), people.size());
         validateRoomType(bookingDTO.getRoomType());
         validatePaymentMethod(bookingDTO.getPaymentMethod());
+        validatePeopleList(bookingDTO.getPeople());
     }
 
-    public HotelRoomValidatedFields validate(HotelRoomBookingRequestDTO requestDTO) {
+    public HotelRoomValidFields validate(HotelRoomBookingRequestDTO requestDTO) {
         validateEmail(requestDTO.getUserName());
         validateBooking(requestDTO.getBooking());
         return validatedFields;

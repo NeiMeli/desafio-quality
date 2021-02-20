@@ -13,7 +13,10 @@ import com.bootcamp.desafioquality.repository.hotelroom.HotelRoomRepository;
 import com.bootcamp.desafioquality.service.hotelroom.HotelRoomService;
 import com.bootcamp.desafioquality.service.hotelroom.exception.HotelRoomServiceError;
 import com.bootcamp.desafioquality.service.hotelroom.exception.HotelRoomServiceException;
+import com.bootcamp.desafioquality.service.hotelroom.impl.exception.RoomNotAvailableException;
 import com.bootcamp.desafioquality.service.hotelroom.impl.query.HotelRoomQuery;
+import com.bootcamp.desafioquality.service.hotelroom.impl.validatedfields.HotelRoomValidFields;
+import com.bootcamp.desafioquality.service.hotelroom.impl.validatedfields.HotelRoomValidatedFieldsProcessor;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -38,7 +41,7 @@ public class HotelRoomServiceImpl implements HotelRoomService {
 
     @Override
     public HotelRoomBookingResponseDTO bookHotelRoom(HotelRoomBookingRequestDTO requestDTO) {
-        HotelRoomValidatedFields validatedFields = new HotelRoomValidatedFieldsProvider().validate(requestDTO);
+        HotelRoomValidFields validatedFields = new HotelRoomValidatedFieldsProcessor().validate(requestDTO);
         HotelRoomBookingResponseDTOBuilder responseBuilder = new HotelRoomBookingResponseDTOBuilder(requestDTO);
         BookingDTO bookingDTO = requestDTO.getBooking();
         final HotelRoom hotelRoom = findHotelRoomOrFail(bookingDTO.getHotelCode(), validatedFields.getLocation());
@@ -48,7 +51,7 @@ public class HotelRoomServiceImpl implements HotelRoomService {
             responseBuilder.withError(e.getMessage());
         }
         responseBuilder.withAmount(calculateAmount(validatedFields.getDateFrom(), validatedFields.getDateTo(), hotelRoom.getPrice(), validatedFields.getPeopleAmount()));
-        responseBuilder.withInterest(validatedFields.getInterest());
+        responseBuilder.withInterest(validatedFields.getPaymentMethodValidatedFields().getInterest());
         return responseBuilder.build();
     }
 

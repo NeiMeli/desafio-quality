@@ -1,4 +1,4 @@
-package com.bootcamp.desafioquality.service.validation;
+package com.bootcamp.desafioquality.service.validation.processor;
 
 import org.jetbrains.annotations.Nullable;
 

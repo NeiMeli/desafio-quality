@@ -1,16 +1,16 @@
-package com.bootcamp.desafioquality.service.hotelroom.impl;
+package com.bootcamp.desafioquality.service.hotelroom.impl.validatedfields;
 
 import com.bootcamp.desafioquality.entity.hotel.RoomType;
 import com.bootcamp.desafioquality.entity.location.Location;
-import com.bootcamp.desafioquality.service.validation.ValidatedFields;
+import com.bootcamp.desafioquality.service.validation.fields.CommonValidFields;
 
 import java.util.function.Function;
 
-public class HotelRoomValidatedFields extends ValidatedFields {
+public class HotelRoomValidFields extends CommonValidFields {
     private RoomType roomType;
     private Location location;
 
-    public HotelRoomValidatedFields(Function<String, RuntimeException> exceptionSupplier) {
+    public HotelRoomValidFields(Function<String, RuntimeException> exceptionSupplier) {
         super(exceptionSupplier);
     }
 
@@ -18,7 +18,7 @@ public class HotelRoomValidatedFields extends ValidatedFields {
         return roomType;
     }
 
-    protected HotelRoomValidatedFields setRoomType(RoomType roomType) {
+    protected HotelRoomValidFields setRoomType(RoomType roomType) {
         this.roomType = roomType;
         return this;
     }
@@ -32,7 +32,7 @@ public class HotelRoomValidatedFields extends ValidatedFields {
         return location;
     }
 
-    public ValidatedFields setLocation(Location location) {
+    public CommonValidFields setLocation(Location location) {
         this.location = location;
         return this;
     }

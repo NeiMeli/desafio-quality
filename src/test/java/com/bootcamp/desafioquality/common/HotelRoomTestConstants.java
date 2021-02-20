@@ -18,6 +18,12 @@ import java.util.function.Supplier;
 public class HotelRoomTestConstants {
     // base de datos mockeada y renovada en cada test para asegurar la independencia
     public static final Supplier<List<HotelRoom>> DATABASE;
+    public static final Supplier<PersonDTO> VALID_PERSON_DTO_1 = () -> new PersonDTO()
+            .setName("name1")
+            .setLastName("lastName1")
+            .setMail("mail1@gmail.com")
+            .setDni("123456")
+            .setBirthDate("10/05/1991");
     public static final Supplier<HotelRoomBookingRequestDTO> VALID_BOOKING_REQUEST = () -> {
         HotelRoomBookingRequestDTO hotelRoomBookingRequestDTO = new HotelRoomBookingRequestDTO();
         hotelRoomBookingRequestDTO.setUserName("mail1@gmail.com");
@@ -28,12 +34,7 @@ public class HotelRoomTestConstants {
         bookingDTO.setDestination(Location.BOGOTA.getLabel());
         bookingDTO.setDateFrom("25/03/2021");
         bookingDTO.setDateTo("14/05/2021");
-        PersonDTO person1 = new PersonDTO()
-                .setName("name1")
-                .setLastName("lastName1")
-                .setMail("mail1@gmail.com")
-                .setDni("123456")
-                .setBirthDate("10/05/1991");
+        PersonDTO person1 = VALID_PERSON_DTO_1.get();
         PersonDTO person2 = new PersonDTO()
                 .setName("name2")
                 .setLastName("lastName2")
@@ -49,6 +50,7 @@ public class HotelRoomTestConstants {
         hotelRoomBookingRequestDTO.setBooking(bookingDTO);
         return hotelRoomBookingRequestDTO;
     };
+
 
     static {
         DATABASE = () -> {

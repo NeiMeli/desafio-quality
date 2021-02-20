@@ -18,9 +18,10 @@ import com.bootcamp.desafioquality.entity.hotel.RoomType;
 import com.bootcamp.desafioquality.entity.paymentmethod.PaymentMethodType;
 import com.bootcamp.desafioquality.repository.hotelroom.impl.HotelRoomCacheRespository;
 import com.bootcamp.desafioquality.service.hotelroom.exception.HotelRoomServiceException;
+import com.bootcamp.desafioquality.service.hotelroom.impl.exception.RoomNotAvailableException;
 import com.bootcamp.desafioquality.service.hotelroom.impl.query.HotelRoomQuery;
 import com.bootcamp.desafioquality.service.hotelroom.impl.query.HotelRoomQueryException;
-import com.bootcamp.desafioquality.service.validation.ServiceValidationError;
+import com.bootcamp.desafioquality.service.validation.error.FieldProcessorError;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -34,11 +35,12 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import static com.bootcamp.desafioquality.common.HotelRoomTestConstants.DATABASE;
+import static com.bootcamp.desafioquality.common.HotelRoomTestConstants.VALID_PERSON_DTO_1;
 import static com.bootcamp.desafioquality.date.DateParser.ERROR_MESSAGE;
 import static com.bootcamp.desafioquality.entity.location.Location.*;
 import static com.bootcamp.desafioquality.service.hotelroom.exception.HotelRoomServiceError.*;
 import static com.bootcamp.desafioquality.service.hotelroom.impl.query.HotelRoomQueryException.HotelRoomQueryExceptionMessage;
-import static com.bootcamp.desafioquality.service.validation.ServiceValidationError.*;
+import static com.bootcamp.desafioquality.service.validation.error.FieldProcessorError.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.mockito.ArgumentMatchers.any;
@@ -301,14 +303,14 @@ class HotelRoomServiceImplTest {
 
         // Medio de pago
         // nulo
-        exceptionAsserter.accept(ServiceValidationError.EMPTY_PAYMENT_METHOD.getMessage());
+        exceptionAsserter.accept(FieldProcessorError.EMPTY_PAYMENT_METHOD.getMessage());
         // no tiene numero
         PaymentMethodDTO paymentMethodDTO = new PaymentMethodDTO();
         bookingDTO.setPaymentMethod(paymentMethodDTO);
-        exceptionAsserter.accept(ServiceValidationError.EMPTY_CARD_NUMBER.getMessage());
+        exceptionAsserter.accept(FieldProcessorError.EMPTY_CARD_NUMBER.getMessage());
         paymentMethodDTO.setNumber("1234");
         // no tiene tipo
-        exceptionAsserter.accept(ServiceValidationError.EMPTY_PAYMENT_METHOD_TYPE.getMessage());
+        exceptionAsserter.accept(FieldProcessorError.EMPTY_PAYMENT_METHOD_TYPE.getMessage());
         // tipo invalido
         paymentMethodDTO.setType("not-a-pm-type");
         exceptionAsserter.accept(PaymentMethodType.PaymentMethodTypeError.PAYMENT_METHOD_TYPE_NOT_FOUND.getMsg("not-a-pm-type"));
@@ -338,6 +340,13 @@ class HotelRoomServiceImplTest {
                 .thenReturn(new CacheDBTableMock<>(hotelRoomList));
         when(repository.listWhere(any())).thenCallRealMethod();
         when(repository.find(anyString())).thenCallRealMethod();
+
+        // todo validacion de personas
+        // mientras pongo datos validos
+        bookingDTO.setRoomType(RoomType.SINGLE.getLabel());
+        bookingDTO.setPeopleAmount("1");
+        bookingDTO.getPeople().clear();
+        bookingDTO.getPeople().add(VALID_PERSON_DTO_1.get());
 
         // codigo de hotel
         // nulo

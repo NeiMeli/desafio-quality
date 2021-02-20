@@ -45,8 +45,8 @@ public class HotelRoomSchedule {
                 // tengo que acortar el to del avl original al from de la reserva
                 // tengo que insertar un nuevo avl desde el to de la reserva hasta el to original
                 availableRanges.add(new DateRange(reqRange.getDateTo(), avlRange.getDateTo()));
-                avlRange.setDateTo(reqRange.getDateFrom());
             }
+            avlRange.setDateTo(reqRange.getDateFrom());
         }
     }
 
