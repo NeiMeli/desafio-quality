@@ -1,9 +1,7 @@
 package com.bootcamp.desafioquality.date;
 
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
@@ -25,10 +23,8 @@ public class DateParser {
         }
     }
 
-    public static int getDaysBetween(String dateFrom, String dateTo) {
-        Date from = fromString(dateFrom);
-        Date to = fromString(dateTo);
-        long diffInMillies = Math.abs(from.getTime() - to.getTime());
+    public static int getDaysBetween(Date dateFrom, Date dateTo) {
+        long diffInMillies = Math.abs(dateFrom.getTime() - dateTo.getTime());
         return (int) TimeUnit.DAYS.convert(diffInMillies, TimeUnit.MILLISECONDS);
     }
 }

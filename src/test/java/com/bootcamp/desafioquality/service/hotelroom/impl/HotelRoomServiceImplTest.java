@@ -29,15 +29,13 @@ import org.springframework.http.HttpStatus;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import static com.bootcamp.desafioquality.common.HotelRoomTestConstants.DATABASE;
 import static com.bootcamp.desafioquality.date.DateParser.ERROR_MESSAGE;
-import static com.bootcamp.desafioquality.entity.location.Location.BOGOTA;
-import static com.bootcamp.desafioquality.entity.location.Location.LocationNotFoundException;
+import static com.bootcamp.desafioquality.entity.location.Location.*;
 import static com.bootcamp.desafioquality.service.hotelroom.exception.HotelRoomServiceError.*;
 import static com.bootcamp.desafioquality.service.hotelroom.impl.query.HotelRoomQueryException.HotelRoomQueryExceptionMessage;
 import static com.bootcamp.desafioquality.service.validation.ServiceValidationError.*;
@@ -263,7 +261,7 @@ class HotelRoomServiceImplTest {
         // invalido
         bookingDTO.setDestination("non-existent-destination");
         exceptionAsserter.accept(String.format(LocationNotFoundException.MESSAGE, "non-existent-destination"));
-        bookingDTO.setDestination(BOGOTA.getLabel());
+        bookingDTO.setDestination(BS_AS.getLabel());
 
         // cdad de personas
         // lista de personas vacia
@@ -339,6 +337,7 @@ class HotelRoomServiceImplTest {
         when(repository.getDatabase())
                 .thenReturn(new CacheDBTableMock<>(hotelRoomList));
         when(repository.listWhere(any())).thenCallRealMethod();
+        when(repository.find(anyString())).thenCallRealMethod();
 
         // codigo de hotel
         // nulo
@@ -346,6 +345,10 @@ class HotelRoomServiceImplTest {
         // inexistente
         bookingDTO.setHotelCode("not-a-hotel-room");
         exceptionAsserter.accept(HOTEL_ROOM_NOT_FOUND.getMessage("not-a-hotel-room"));
+
+        // hotel y ubicacion no coinciden
+        bookingDTO.setHotelCode("SE-0001");
+        exceptionAsserter.accept(HOTEL_AND_LOCATION_MISTMACH.getMessage());
     }
 
     @Test
@@ -366,8 +369,9 @@ class HotelRoomServiceImplTest {
         assertThat(response.getTotal()).isEqualTo(468000d);
 
         // tengo que asgurarme que la habitacion quedó sin disponibilidad en esa fecha
-        HotelRoom hotelRoom = repository.find(request.getBooking().getHotelCode()).orElseThrow();
-        assertThat(hotelRoom.hasRangeAvailable(DateParser.fromString(request.getBooking().getDateFrom()), DateParser.fromString(request.getBooking().getDateTo()))).isFalse();
+        BookingDTO booking = request.getBooking();
+        HotelRoom hotelRoom = repository.find(booking.getHotelCode()).orElseThrow();
+        assertThat(hotelRoom.hasRangeAvailable(DateParser.fromString(booking.getDateFrom()), DateParser.fromString(booking.getDateTo()))).isFalse();
         // si hago el mismo request, va a dar error
         HotelRoomBookingResponseDTO response2 = service.bookHotelRoom(request);
         StatusCodeDTO statusCode2 = response2.getStatusCode();
@@ -377,6 +381,15 @@ class HotelRoomServiceImplTest {
         assertThat(response2.getAmount()).isNull();
         assertThat(response2.getInterest()).isNull();
         assertThat(response2.getTotal()).isNull();
+
+        // si hago una reserva mas adelante tengo que poder
+        booking.setDateFrom(booking.getDateTo());
+        booking.setDateTo("17/06/2021");
+        HotelRoomBookingResponseDTO response3 = service.bookHotelRoom(request);
+        StatusCodeDTO statusCode3 = response3.getStatusCode();
+        assertThat(statusCode3.getCode()).isEqualTo(HttpStatus.OK.value());
+        assertThat(statusCode3.getMessage()).isEqualTo(HotelRoomBookingResponseDTOBuilder.SUCCESS_MESSAGE);
+
     }
 
     @Test

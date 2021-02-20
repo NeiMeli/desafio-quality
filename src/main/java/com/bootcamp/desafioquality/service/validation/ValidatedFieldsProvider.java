@@ -11,10 +11,10 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Date;
 import java.util.function.Function;
 
-public class ServiceValidator {
+public abstract class ValidatedFieldsProvider {
     protected final Function<String, RuntimeException> exceptionSupplier;
 
-    public ServiceValidator(Function<String, RuntimeException> exceptionSupplier) {
+    public ValidatedFieldsProvider(Function<String, RuntimeException> exceptionSupplier) {
         this.exceptionSupplier = exceptionSupplier;
     }
 
@@ -22,7 +22,10 @@ public class ServiceValidator {
         if (!EmailValidator.isEmailValid(email)) {
             throw exceptionSupplier.apply(ServiceValidationError.INVALID_MAIL_FORMAT.getMessage());
         }
+        getValidatedFields().setEmail(email);
     }
+
+    protected abstract ValidatedFields getValidatedFields();
 
     public void validateDates(String dateFromString, String dateToString) {
         Date dateFrom = DateParser.fromStringOrElseThrow(dateFromString, exceptionSupplier);
@@ -30,6 +33,8 @@ public class ServiceValidator {
         final DateRangeValidator dateRangeValidator = new DateRangeValidator(exceptionSupplier);
         dateRangeValidator.validateDateFrom(dateFrom);
         dateRangeValidator.validateDateTo(dateTo);
+        getValidatedFields().setDateFrom(dateFrom);
+        getValidatedFields().setDateTo(dateTo);
     }
 
     public void validatePeopleAmount(String peopleAmountParameter, int actualPeopleAmount) {
@@ -49,7 +54,7 @@ public class ServiceValidator {
         if (intAmount != actualPeopleAmount) {
             throw exceptionSupplier.apply(ServiceValidationError.PEOPLE_AMOUNT_AND_PEOPLE_LIST_SIZE_MISMATCH.getMessage());
         }
-
+        getValidatedFields().setPeopleAmount(intAmount);
     }
 
     public void validateLocation(String location) {
@@ -74,6 +79,9 @@ public class ServiceValidator {
         Integer installments = paymentMethodDTO.getDues();
         if (installments == null)
             throw exceptionSupplier.apply(ServiceValidationError.EMPTY_INSTALLMENTS.getMessage());
-        pmType.getInterest(installments); // esto por dentro valida
+        double interest = pmType.getInterest(installments);
+        getValidatedFields().setPaymentMethodType(pmType);
+        getValidatedFields().setInstallments(installments);
+        getValidatedFields().setInterest(interest);
     }
 }
