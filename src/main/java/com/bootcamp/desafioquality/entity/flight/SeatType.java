@@ -21,6 +21,10 @@ public enum SeatType {
                 .orElseThrow(() -> new SeatTypeNotFoundException(label));
     }
 
+    public String getLabel() {
+        return label;
+    }
+
     public static class SeatTypeNotFoundException extends BadRequestException {
         public static final String MESSAGE = "Tipo de asiento %s inexistente";
         public SeatTypeNotFoundException(String value) {

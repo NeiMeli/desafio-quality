@@ -1,5 +1,6 @@
 package com.bootcamp.desafioquality.controller.flight;
 
+import com.bootcamp.desafioquality.controller.ExceptionHandlerController;
 import com.bootcamp.desafioquality.controller.flight.dto.response.FlightResponseDTO;
 import com.bootcamp.desafioquality.service.flight.FlightService;
 import com.bootcamp.desafioquality.service.flight.query.FlightQuery;
@@ -13,7 +14,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/flights")
-public class FlightController {
+public class FlightController implements ExceptionHandlerController {
     @Autowired
     FlightService service;
 

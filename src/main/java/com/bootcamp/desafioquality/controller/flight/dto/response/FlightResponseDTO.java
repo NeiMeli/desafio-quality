@@ -7,12 +7,12 @@ import java.util.Date;
 
 public class FlightResponseDTO {
     private String code;
-    private Location origin;
-    private Location destination;
-    private SeatType seatType;
+    private String origin;
+    private String destination;
+    private String seatType;
     private Double price;
-    private Date dateFrom;
-    private Date dateTo;
+    private String dateFrom;
+    private String dateTo;
 
     public String getCode() {
         return code;
@@ -23,29 +23,29 @@ public class FlightResponseDTO {
         return this;
     }
 
-    public Location getOrigin() {
+    public String getOrigin() {
         return origin;
     }
 
-    public FlightResponseDTO setOrigin(Location origin) {
+    public FlightResponseDTO setOrigin(String origin) {
         this.origin = origin;
         return this;
     }
 
-    public Location getDestination() {
+    public String getDestination() {
         return destination;
     }
 
-    public FlightResponseDTO setDestination(Location destination) {
+    public FlightResponseDTO setDestination(String destination) {
         this.destination = destination;
         return this;
     }
 
-    public SeatType getSeatType() {
+    public String getSeatType() {
         return seatType;
     }
 
-    public FlightResponseDTO setSeatType(SeatType seatType) {
+    public FlightResponseDTO setSeatType(String seatType) {
         this.seatType = seatType;
         return this;
     }
@@ -59,20 +59,20 @@ public class FlightResponseDTO {
         return this;
     }
 
-    public Date getDateFrom() {
+    public String getDateFrom() {
         return dateFrom;
     }
 
-    public FlightResponseDTO setDateFrom(Date dateFrom) {
+    public FlightResponseDTO setDateFrom(String dateFrom) {
         this.dateFrom = dateFrom;
         return this;
     }
 
-    public Date getDateTo() {
+    public String getDateTo() {
         return dateTo;
     }
 
-    public FlightResponseDTO setDateTo(Date dateTo) {
+    public FlightResponseDTO setDateTo(String dateTo) {
         this.dateTo = dateTo;
         return this;
     }
