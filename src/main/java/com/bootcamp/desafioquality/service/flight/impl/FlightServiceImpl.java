@@ -7,6 +7,8 @@ import com.bootcamp.desafioquality.controller.flight.dto.response.FlightResponse
 import com.bootcamp.desafioquality.repository.flight.FlightRepository;
 import com.bootcamp.desafioquality.service.flight.FlightService;
 import com.bootcamp.desafioquality.service.flight.query.FlightQuery;
+import com.bootcamp.desafioquality.service.flight.validfields.FlightValidFields;
+import com.bootcamp.desafioquality.service.flight.validfields.FlightValidFieldsProcessor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -27,6 +29,7 @@ public class FlightServiceImpl implements FlightService  {
 
     @Override
     public FlightReservationResponseDTO reserveFlight(FlightReservationRequestDTO reservationDTO) {
+        FlightValidFields validFields = new FlightValidFieldsProcessor().validate(reservationDTO);
         return null;
     }
 }

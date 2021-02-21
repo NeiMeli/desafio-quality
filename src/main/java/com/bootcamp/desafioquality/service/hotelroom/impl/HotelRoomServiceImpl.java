@@ -15,8 +15,8 @@ import com.bootcamp.desafioquality.service.hotelroom.exception.HotelRoomServiceE
 import com.bootcamp.desafioquality.service.hotelroom.exception.HotelRoomServiceException;
 import com.bootcamp.desafioquality.service.hotelroom.impl.exception.RoomNotAvailableException;
 import com.bootcamp.desafioquality.service.hotelroom.impl.query.HotelRoomQuery;
-import com.bootcamp.desafioquality.service.hotelroom.impl.validatedfields.HotelRoomValidFields;
-import com.bootcamp.desafioquality.service.hotelroom.impl.validatedfields.HotelRoomValidatedFieldsProcessor;
+import com.bootcamp.desafioquality.service.hotelroom.impl.validfields.HotelRoomValidFields;
+import com.bootcamp.desafioquality.service.hotelroom.impl.validfields.HotelRoomValidFieldsProcessor;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -41,10 +41,10 @@ public class HotelRoomServiceImpl implements HotelRoomService {
 
     @Override
     public HotelRoomBookingResponseDTO bookHotelRoom(HotelRoomBookingRequestDTO requestDTO) {
-        HotelRoomValidFields validatedFields = new HotelRoomValidatedFieldsProcessor().validate(requestDTO);
+        HotelRoomValidFields validatedFields = new HotelRoomValidFieldsProcessor().validate(requestDTO);
         HotelRoomBookingResponseDTOBuilder responseBuilder = new HotelRoomBookingResponseDTOBuilder(requestDTO);
         BookingDTO bookingDTO = requestDTO.getBooking();
-        final HotelRoom hotelRoom = findHotelRoomOrFail(bookingDTO.getHotelCode(), validatedFields.getLocation());
+        final HotelRoom hotelRoom = findHotelRoomOrFail(bookingDTO.getHotelCode(), validatedFields.getDestination());
         try {
             processHotelRoomReservation(validatedFields.getDateFrom(), validatedFields.getDateTo(), hotelRoom);
         } catch (RoomNotAvailableException e) {

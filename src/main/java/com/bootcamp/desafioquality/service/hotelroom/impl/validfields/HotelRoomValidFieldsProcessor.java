@@ -1,23 +1,22 @@
-package com.bootcamp.desafioquality.service.hotelroom.impl.validatedfields;
+package com.bootcamp.desafioquality.service.hotelroom.impl.validfields;
 
 import com.bootcamp.desafioquality.controller.hotelroom.dto.request.BookingDTO;
 import com.bootcamp.desafioquality.controller.hotelroom.dto.request.HotelRoomBookingRequestDTO;
 import com.bootcamp.desafioquality.controller.hotelroom.dto.request.PersonDTO;
 import com.bootcamp.desafioquality.entity.hotel.RoomType;
-import com.bootcamp.desafioquality.entity.location.Location;
 import com.bootcamp.desafioquality.service.hotelroom.exception.HotelRoomServiceException;
 import com.bootcamp.desafioquality.service.validation.error.FieldProcessorError;
-import com.bootcamp.desafioquality.service.validation.processor.CommonValidFieldsProcessor;
 import com.bootcamp.desafioquality.service.validation.fields.CommonValidFields;
+import com.bootcamp.desafioquality.service.validation.processor.CommonValidFieldsProcessor;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
 import static com.bootcamp.desafioquality.service.hotelroom.exception.HotelRoomServiceError.*;
 
-public class HotelRoomValidatedFieldsProcessor extends CommonValidFieldsProcessor {
+public class HotelRoomValidFieldsProcessor extends CommonValidFieldsProcessor {
     private final HotelRoomValidFields validatedFields;
-    public HotelRoomValidatedFieldsProcessor() {
+    public HotelRoomValidFieldsProcessor() {
         super(HotelRoomServiceException::new);
         this.validatedFields = new HotelRoomValidFields(HotelRoomServiceException::new);
     }
@@ -31,12 +30,6 @@ public class HotelRoomValidatedFieldsProcessor extends CommonValidFieldsProcesso
     public void validatePeopleAmount(String peopleAmountParameter, int actualPeopleAmount) {
         super.validatePeopleAmount(peopleAmountParameter, actualPeopleAmount);
         if (validatedFields.hasRoomType()) validateRoomCapacity(validatedFields.getPeopleAmount(), validatedFields.getRoomType());
-    }
-
-    @Override
-    public void validateLocation(String location) {
-        super.validateLocation(location);
-        validatedFields.setLocation(Location.fromLabel(location));
     }
 
     public void validateRoomType(@Nullable String roomTypeString) {
@@ -59,7 +52,7 @@ public class HotelRoomValidatedFieldsProcessor extends CommonValidFieldsProcesso
             throw exceptionSupplier.apply(EMPTY_BOOKING.getMessage());
         }
         validateDates(bookingDTO.getDateFrom(), bookingDTO.getDateTo());
-        validateLocation(bookingDTO.getDestination());
+        validateDestination(bookingDTO.getDestination());
         List<PersonDTO> people = bookingDTO.getPeople();
         if (people == null || people.isEmpty()) {
             throw exceptionSupplier.apply(FieldProcessorError.EMPTY_PEOPLE_LIST.getMessage());

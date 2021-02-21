@@ -1,10 +1,5 @@
 package com.bootcamp.desafioquality.controller.flight.dto.response;
 
-import com.bootcamp.desafioquality.entity.flight.SeatType;
-import com.bootcamp.desafioquality.entity.location.Location;
-
-import java.util.Date;
-
 public class FlightResponseDTO {
     private String code;
     private String origin;

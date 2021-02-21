@@ -1,5 +1,7 @@
 package com.bootcamp.desafioquality.service.validation.fields;
 
+import com.bootcamp.desafioquality.entity.location.Location;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -9,6 +11,7 @@ public class CommonValidFields implements FieldValidityEnsurer {
     private String email;
     private Date dateFrom;
     private Date dateTo;
+    private Location destination;
     protected Integer peopleAmount;
     private final List<PersonValidFields> personValidatedFields;
     private final PaymentMethodValidFields paymentMethodValidatedFields;
@@ -70,6 +73,16 @@ public class CommonValidFields implements FieldValidityEnsurer {
 
     public PaymentMethodValidFields getPaymentMethodValidatedFields() {
         return paymentMethodValidatedFields;
+    }
+
+    public Location getDestination() {
+        ensureFieldWasValidated(destination, "Ubicacion");
+        return destination;
+    }
+
+    public CommonValidFields setDestination(Location destination) {
+        this.destination = destination;
+        return this;
     }
 
     @Override

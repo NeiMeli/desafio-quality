@@ -1,15 +1,15 @@
 package com.bootcamp.desafioquality.controller.flight;
 
 import com.bootcamp.desafioquality.controller.ExceptionHandlerController;
+import com.bootcamp.desafioquality.controller.flight.dto.request.FlightReservationRequestDTO;
+import com.bootcamp.desafioquality.controller.flight.dto.response.FlightReservationResponseDTO;
 import com.bootcamp.desafioquality.controller.flight.dto.response.FlightResponseDTO;
 import com.bootcamp.desafioquality.service.flight.FlightService;
 import com.bootcamp.desafioquality.service.flight.query.FlightQuery;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -31,5 +31,10 @@ public class FlightController implements ExceptionHandlerController {
                 .withDestination(destination)
                 .withSeatType(seatType);
         return service.query(query);
+    }
+
+    @PostMapping("/flight-reservation")
+    public FlightReservationResponseDTO reserve(@Valid @RequestBody FlightReservationRequestDTO reservationRequest) {
+        return service.reserveFlight(reservationRequest);
     }
 }

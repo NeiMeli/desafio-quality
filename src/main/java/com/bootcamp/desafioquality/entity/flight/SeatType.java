@@ -3,6 +3,7 @@ package com.bootcamp.desafioquality.entity.flight;
 import com.bootcamp.desafioquality.exception.BadRequestException;
 
 import java.util.Arrays;
+import java.util.function.Function;
 
 public enum SeatType {
     ECONOMY ("Economy"),
@@ -15,10 +16,14 @@ public enum SeatType {
     }
 
     public static SeatType fromLabel(String label) {
+        return fromLabelOrElseThrow(label, SeatTypeNotFoundException::new);
+    }
+
+    public static SeatType fromLabelOrElseThrow(String label, Function<String, RuntimeException> exceptionSupplier) {
         return Arrays.stream(values())
                 .filter(v -> v.label.equalsIgnoreCase(label))
                 .findFirst()
-                .orElseThrow(() -> new SeatTypeNotFoundException(label));
+                .orElseThrow(() -> exceptionSupplier.apply(String.format(SeatTypeNotFoundException.MESSAGE, label)));
     }
 
     public String getLabel() {

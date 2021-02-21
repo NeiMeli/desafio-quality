@@ -64,10 +64,8 @@ public abstract class CommonValidFieldsProcessor {
         getValidatedFields().setPeopleAmount(intAmount);
     }
 
-    public void validateLocation(String location) {
-        if (location == null || !Location.exists(location)) {
-            throw exceptionSupplier.apply(String.format(Location.LocationNotFoundException.MESSAGE, location));
-        }
+    public Location validateLocation(String location) {
+        return Location.fromLabelOrElseThrow(location, exceptionSupplier);
     }
 
     public void validatePaymentMethod(@Nullable PaymentMethodDTO paymentMethodDTO) {
@@ -91,6 +89,11 @@ public abstract class CommonValidFieldsProcessor {
         paymentMethodValidatedFields.setPaymentMethodType(pmType);
         paymentMethodValidatedFields.setInstallments(installments);
         paymentMethodValidatedFields.setInterest(interest);
+    }
+
+    protected void validateDestination(String destination) {
+        Location location = validateLocation(destination);
+        getValidatedFields().setDestination(location);
     }
 
     protected void validatePeopleList(List<PersonDTO> peopleList) {
