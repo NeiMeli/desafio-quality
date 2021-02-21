@@ -16,7 +16,7 @@ public class PersonValidFieldsProcessor implements RequiredFieldsValidator<Perso
     public PersonValidFields validate(PersonDTO personDTO) {
         PersonValidFields personValidFields = new PersonValidFields(exceptionSupplier);
         validateRequiredFields(personDTO);
-        if (!EmailValidator.isEmailValid(personDTO.getMail())) {
+        if (EmailValidator.isEmailInvalid(personDTO.getMail())) {
             throw exceptionSupplier.apply(FieldProcessorError.INVALID_MAIL_FORMAT.getMessage());
         }
         String dni = personDTO.getDni();

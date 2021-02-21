@@ -26,7 +26,7 @@ public abstract class CommonValidFieldsProcessor {
     }
 
     public void validateEmail(@Nullable String email) {
-        if (!EmailValidator.isEmailValid(email)) {
+        if (EmailValidator.isEmailInvalid(email)) {
             throw exceptionSupplier.apply(FieldProcessorError.INVALID_MAIL_FORMAT.getMessage());
         }
         getValidatedFields().setEmail(email);

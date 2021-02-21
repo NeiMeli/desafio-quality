@@ -39,7 +39,6 @@ import static com.bootcamp.desafioquality.common.HotelRoomTestConstants.VALID_PE
 import static com.bootcamp.desafioquality.date.DateParser.ERROR_MESSAGE;
 import static com.bootcamp.desafioquality.entity.location.Location.*;
 import static com.bootcamp.desafioquality.service.hotelroom.exception.HotelRoomServiceError.*;
-import static com.bootcamp.desafioquality.service.hotelroom.impl.query.HotelRoomQueryException.HotelRoomQueryExceptionMessage;
 import static com.bootcamp.desafioquality.service.validation.error.FieldProcessorError.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
@@ -215,14 +214,14 @@ class HotelRoomServiceImplTest {
         String invalidDateTo = "11/02/2021";
         assertThatExceptionOfType(HotelRoomQueryException.class)
                 .isThrownBy(() -> hotelRoomQuery.withDateTo(invalidDateTo))
-                .withMessageContaining(HotelRoomQueryExceptionMessage.INVALID_DATE_TO.getMessage());
+                .withMessageContaining(DateRangeValidator.DateRangeError.INVALID_DATE_TO.getMessage());
 
         // fecha desde invalida
         hotelRoomQuery.withDateTo("14/02/2021");
         String invalidDateFrom = "14/02/2021";
         assertThatExceptionOfType(HotelRoomQueryException.class)
                 .isThrownBy(() -> hotelRoomQuery.withDateFrom(invalidDateFrom))
-                .withMessageContaining(HotelRoomQueryExceptionMessage.INVALID_DATE_FROM.getMessage());
+                .withMessageContaining(DateRangeValidator.DateRangeError.INVALID_DATE_FROM.getMessage());
     }
 
     @Test

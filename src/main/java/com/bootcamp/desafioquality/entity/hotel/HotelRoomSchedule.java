@@ -20,7 +20,7 @@ public class HotelRoomSchedule {
         DateRange avlRange = availableRanges.stream()
                 .filter(ar -> ar.isWithinRange(reqRange))
                 .findFirst()
-                .orElseThrow();
+                .orElseThrow(); // todo exception custom
         adjustRanges(reqRange, avlRange);
     }
 

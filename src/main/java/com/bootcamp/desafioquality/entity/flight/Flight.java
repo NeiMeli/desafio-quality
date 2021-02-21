@@ -1,6 +1,7 @@
 package com.bootcamp.desafioquality.entity.flight;
 
 import com.bootcamp.desafioquality.entity.Persistable;
+import com.bootcamp.desafioquality.entity.location.Location;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.jetbrains.annotations.NotNull;
 
@@ -10,8 +11,8 @@ import java.util.Date;
 
 public class Flight implements Persistable<String> {
     private String code;
-    private String origin;
-    private String destination;
+    private Location origin;
+    private Location destination;
     private SeatType seatType;
     private double price;
     private Date dateFrom;
@@ -20,8 +21,8 @@ public class Flight implements Persistable<String> {
     public static Flight fromJson(JsonNode jn) {
         Flight flight = new Flight();
         flight.setCode(jn.get("nroVuelo").textValue())
-                .setOrigin(jn.get("origen").textValue())
-                .setDestination(jn.get("destino").textValue())
+                .setOrigin(Location.fromLabel(jn.get("origen").textValue()))
+                .setDestination(Location.fromLabel(jn.get("destino").textValue()))
                 .setSeatType(SeatType.fromLabel(jn.get("tipoAsiento").textValue()))
                 .setPrice(jn.get("precioPorPersona").doubleValue())
                 .setDateFrom(jn.get("fechaIda").textValue())
@@ -38,20 +39,20 @@ public class Flight implements Persistable<String> {
         return this;
     }
 
-    public String getOrigin() {
+    public Location getOrigin() {
         return origin;
     }
 
-    public Flight setOrigin(String origin) {
+    public Flight setOrigin(Location origin) {
         this.origin = origin;
         return this;
     }
 
-    public String getDestination() {
+    public Location getDestination() {
         return destination;
     }
 
-    public Flight setDestination(String destination) {
+    public Flight setDestination(Location destination) {
         this.destination = destination;
         return this;
     }

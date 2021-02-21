@@ -10,6 +10,9 @@ import com.fasterxml.jackson.databind.JsonNode;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Repository;
 
+import java.util.function.Predicate;
+import java.util.stream.Stream;
+
 @Repository
 public class FlightCacheRepository implements FlightRepository, CacheRepository<String, Flight> {
     final CacheDBTable<String, Flight> database;
@@ -29,5 +32,10 @@ public class FlightCacheRepository implements FlightRepository, CacheRepository<
     @Override
     public CacheDBTable<String, Flight> getDatabase() {
         return this.database;
+    }
+
+    @Override
+    public Stream<Flight> listWhere(Predicate<Flight> predicate) {
+        return getDatabase().listWhere(predicate);
     }
 }

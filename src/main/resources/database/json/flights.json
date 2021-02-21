@@ -2,7 +2,7 @@
   {
     "nroVuelo": "BAPI-1235",
     "origen": "Buenos Aires",
-    "destino": "Puerto Iguazú",
+    "destino": "Puerto Iguazu",
     "tipoAsiento": "Economy",
     "precioPorPersona": 6500,
     "fechaIda": "10/02/2021",
@@ -10,7 +10,7 @@
   },
   {
     "nroVuelo": "PIBA-1420",
-    "origen": "Puerto Iguazú",
+    "origen": "Puerto Iguazu",
     "destino": "Bogotá",
     "tipoAsiento": "Business",
     "precioPorPersona": 43200,
@@ -19,7 +19,7 @@
   },
   {
     "nroVuelo": "PIBA-1420",
-    "origen": "Puerto Iguazú",
+    "origen": "Puerto Iguazu",
     "destino": "Bogotá",
     "tipoAsiento": "Economy",
     "precioPorPersona": 25735,
@@ -38,7 +38,7 @@
   {
     "nroVuelo": "TUPI-3369",
     "origen": "Tucumán",
-    "destino": "Puerto Iguazú",
+    "destino": "Puerto Iguazu",
     "tipoAsiento": "Business",
     "precioPorPersona": 12530,
     "fechaIda": "12/02/2021",
@@ -47,7 +47,7 @@
   {
     "nroVuelo": "TUPI-3369",
     "origen": "Tucumán",
-    "destino": "Puerto Iguazú",
+    "destino": "Puerto Iguazu",
     "tipoAsiento": "Economy",
     "precioPorPersona": 5400,
     "fechaIda": "02/01/2021",
@@ -101,7 +101,7 @@
   {
     "nroVuelo": "MEPI-9986",
     "origen": "Medellín",
-    "destino": "Puerto Iguazú",
+    "destino": "Puerto Iguazu",
     "tipoAsiento": "Business",
     "precioPorPersona": 41640,
     "fechaIda": "24/02/2021",
