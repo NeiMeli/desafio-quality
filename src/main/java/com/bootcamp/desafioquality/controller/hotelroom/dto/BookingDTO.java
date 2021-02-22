@@ -1,4 +1,7 @@
-package com.bootcamp.desafioquality.controller.hotelroom.dto.request;
+package com.bootcamp.desafioquality.controller.hotelroom.dto;
+
+import com.bootcamp.desafioquality.controller.hotelroom.dto.request.PaymentMethodDTO;
+import com.bootcamp.desafioquality.controller.hotelroom.dto.request.PersonDTO;
 
 import java.util.List;
 

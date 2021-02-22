@@ -1,7 +1,7 @@
 package com.bootcamp.desafioquality.controller.hotelroom.dto.response;
 
 import com.bootcamp.desafioquality.controller.common.dto.response.StatusCodeDTO;
-import com.bootcamp.desafioquality.controller.hotelroom.dto.request.BookingDTO;
+import com.bootcamp.desafioquality.controller.hotelroom.dto.BookingDTO;
 
 public class HotelRoomBookingResponseDTO {
     private String userName;

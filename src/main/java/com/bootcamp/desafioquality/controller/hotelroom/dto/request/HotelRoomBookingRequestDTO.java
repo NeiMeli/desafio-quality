@@ -1,5 +1,7 @@
 package com.bootcamp.desafioquality.controller.hotelroom.dto.request;
 
+import com.bootcamp.desafioquality.controller.hotelroom.dto.BookingDTO;
+
 public class HotelRoomBookingRequestDTO {
     private String userName;
     private BookingDTO booking;

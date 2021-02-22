@@ -22,4 +22,23 @@ public class FlightValidFields extends CommonValidFields {
     public void setSeatType(SeatType st) {
         this.seatType = st;
     }
+
+    public Location getOrigin() {
+        return origin;
+    }
+
+    @Override
+    public Location getDestination() {
+        return destination;
+    }
+
+    @Override
+    public FlightValidFields setDestination(Location destination) {
+        this.destination = destination;
+        return this;
+    }
+
+    public SeatType getSeatType() {
+        return seatType;
+    }
 }

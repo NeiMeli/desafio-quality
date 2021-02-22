@@ -3,7 +3,7 @@ package com.bootcamp.desafioquality.service.hotelroom.impl;
 import com.bootcamp.desafioquality.common.CacheDBTableMock;
 import com.bootcamp.desafioquality.common.HotelRoomTestConstants;
 import com.bootcamp.desafioquality.controller.common.dto.response.StatusCodeDTO;
-import com.bootcamp.desafioquality.controller.hotelroom.dto.request.BookingDTO;
+import com.bootcamp.desafioquality.controller.hotelroom.dto.BookingDTO;
 import com.bootcamp.desafioquality.controller.hotelroom.dto.request.HotelRoomBookingRequestDTO;
 import com.bootcamp.desafioquality.controller.hotelroom.dto.request.PaymentMethodDTO;
 import com.bootcamp.desafioquality.controller.hotelroom.dto.request.PersonDTO;

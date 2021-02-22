@@ -1,6 +1,6 @@
 package com.bootcamp.desafioquality.common;
 
-import com.bootcamp.desafioquality.controller.hotelroom.dto.request.BookingDTO;
+import com.bootcamp.desafioquality.controller.hotelroom.dto.BookingDTO;
 import com.bootcamp.desafioquality.controller.hotelroom.dto.request.HotelRoomBookingRequestDTO;
 import com.bootcamp.desafioquality.controller.hotelroom.dto.request.PaymentMethodDTO;
 import com.bootcamp.desafioquality.controller.hotelroom.dto.request.PersonDTO;
