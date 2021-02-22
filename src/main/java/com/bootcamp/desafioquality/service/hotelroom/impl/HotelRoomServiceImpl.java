@@ -1,13 +1,11 @@
 package com.bootcamp.desafioquality.service.hotelroom.impl;
 
-import com.bootcamp.desafioquality.controller.hotelroom.dto.BookingDTO;
+import com.bootcamp.desafioquality.controller.hotelroom.dto.request.BookingRequestDTO;
 import com.bootcamp.desafioquality.controller.hotelroom.dto.request.HotelRoomBookingRequestDTO;
-import com.bootcamp.desafioquality.controller.hotelroom.dto.response.HotelRoomBookingResponseDTO;
-import com.bootcamp.desafioquality.controller.hotelroom.dto.response.HotelRoomBookingResponseDTOBuilder;
-import com.bootcamp.desafioquality.controller.hotelroom.dto.response.HotelRoomResponseDTO;
-import com.bootcamp.desafioquality.controller.hotelroom.dto.response.HotelRoomResponseDTOBuilder;
+import com.bootcamp.desafioquality.controller.hotelroom.dto.response.*;
 import com.bootcamp.desafioquality.date.DateParser;
 import com.bootcamp.desafioquality.entity.hotel.HotelRoom;
+import com.bootcamp.desafioquality.entity.hotel.RoomType;
 import com.bootcamp.desafioquality.entity.location.Location;
 import com.bootcamp.desafioquality.repository.hotelroom.HotelRoomRepository;
 import com.bootcamp.desafioquality.service.hotelroom.HotelRoomService;
@@ -43,18 +41,20 @@ public class HotelRoomServiceImpl implements HotelRoomService {
 
     @Override
     public HotelRoomBookingResponseDTO bookHotelRoom(HotelRoomBookingRequestDTO requestDTO) {
-        HotelRoomValidFields validatedFields = new HotelRoomValidFieldsProcessor().validate(requestDTO);
-        HotelRoomBookingResponseDTOBuilder responseBuilder = new HotelRoomBookingResponseDTOBuilder(requestDTO);
-        BookingDTO bookingDTO = requestDTO.getBooking();
-        final HotelRoom hotelRoom = findHotelRoomOrFail(bookingDTO.getHotelCode(), validatedFields.getDestination());
+        HotelRoomValidFields validFields = new HotelRoomValidFieldsProcessor().validate(requestDTO);
+        HotelRoomBookingResponseDTOBuilder responseBuilder = new HotelRoomBookingResponseDTOBuilder(requestDTO, validFields);
+        BookingRequestDTO bookingRequestDTO = requestDTO.getBooking();
+        String hotelCode = bookingRequestDTO.getHotelCode();
+        final HotelRoom hotelRoom = findHotelRoomOrFail(hotelCode, validFields.getDestination(), validFields.getRoomType());
+        responseBuilder.withHotelCode(hotelCode);
         try {
-            processHotelRoomReservation(validatedFields.getDateFrom(), validatedFields.getDateTo(), hotelRoom);
+            processHotelRoomReservation(validFields.getDateFrom(), validFields.getDateTo(), hotelRoom);
         } catch (RoomNotAvailableException e) {
             responseBuilder.withError(e.getMessage());
             return responseBuilder.build();
         }
-        responseBuilder.withAmount(calculateAmount(validatedFields.getDateFrom(), validatedFields.getDateTo(), hotelRoom.getPrice(), validatedFields.getPeopleAmount()));
-        responseBuilder.withInterest(validatedFields.getPaymentMethodValidatedFields().getInterest());
+        responseBuilder.withAmount(calculateAmount(validFields.getDateFrom(), validFields.getDateTo(), hotelRoom.getPrice(), validFields.getPeopleAmount()));
+        responseBuilder.withInterest(validFields.getPaymentMethodValidatedFields().getInterest());
         return responseBuilder.build();
     }
 
@@ -71,15 +71,16 @@ public class HotelRoomServiceImpl implements HotelRoomService {
         }
     }
 
-    private HotelRoom findHotelRoomOrFail(String hotelCode, Location location) {
+    private HotelRoom findHotelRoomOrFail(String hotelCode, Location location, RoomType roomType) {
         if (Strings.isBlank(hotelCode))
             throw new HotelRoomServiceException(HotelRoomServiceError.EMPTY_HOTEL_CODE.getMessage());
-        Optional<HotelRoom> hotelRoomOpt = repository.find(hotelCode);
+        HotelRoomQuery query = new HotelRoomQuery();
+        query.withHotelCode(hotelCode);
+        query.withDestinations(List.of(location));
+        query.withRoomType(roomType);
+        Optional<HotelRoom> hotelRoomOpt = repository.findFirst(query.buildPredicate());
         if (hotelRoomOpt.isEmpty())
-            throw new HotelRoomServiceException(HotelRoomServiceError.HOTEL_ROOM_NOT_FOUND.getMessage(hotelCode));
-        HotelRoom hotelRoom = hotelRoomOpt.get();
-        if (hotelRoom.getLocation() != location)
-            throw new HotelRoomServiceException(HotelRoomServiceError.HOTEL_AND_LOCATION_MISTMACH.getMessage());
-        return hotelRoom;
+            throw new HotelRoomServiceException(HotelRoomServiceError.HOTEL_ROOM_NOT_FOUND.getMessage());
+        return hotelRoomOpt.get();
     }
 }

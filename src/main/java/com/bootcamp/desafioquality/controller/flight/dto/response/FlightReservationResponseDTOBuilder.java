@@ -1,18 +1,15 @@
 package com.bootcamp.desafioquality.controller.flight.dto.response;
 
 import com.bootcamp.desafioquality.controller.common.dto.response.StatusCodeDTO;
+import com.bootcamp.desafioquality.controller.dtoutil.PersonDTOBuilder;
 import com.bootcamp.desafioquality.controller.flight.dto.FlightReservationDTO;
-import com.bootcamp.desafioquality.controller.hotelroom.dto.request.PaymentMethodDTO;
-import com.bootcamp.desafioquality.controller.hotelroom.dto.request.PersonDTO;
 import com.bootcamp.desafioquality.date.DateParser;
 import com.bootcamp.desafioquality.service.flight.validfields.FlightValidFields;
 import com.bootcamp.desafioquality.service.validation.fields.PaymentMethodValidFields;
-import com.bootcamp.desafioquality.service.validation.fields.PersonValidFields;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.http.HttpStatus;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.stream.Collectors;
 
 public class FlightReservationResponseDTOBuilder {
     public static final String SUCCESS_MESSAGE = "El proceso termino satisfactoriamente";
@@ -33,7 +30,6 @@ public class FlightReservationResponseDTOBuilder {
         FlightReservationResponseDTO dto = new FlightReservationResponseDTO();
         dto.setUserName(validFields.getEmail());
         fillReservationDto(dto);
-        fillPeople(dto);
         StatusCodeDTO statusCode = new StatusCodeDTO();
         statusCode.setCode(status.value());
         if (error != null) {
@@ -47,30 +43,12 @@ public class FlightReservationResponseDTOBuilder {
     }
 
     private void fillPayment(FlightReservationResponseDTO dto) {
-        PaymentMethodDTO paymentMethod = new PaymentMethodDTO();
         PaymentMethodValidFields paymentMethodValidatedFields = validFields.getPaymentMethodValidatedFields();
-        paymentMethod.setDues(paymentMethodValidatedFields.getInstallments());
-        paymentMethod.setType(paymentMethodValidatedFields.getPaymentMethodType().getLabel());
-        dto.getFlightReservation().setPaymentMethod(paymentMethod);
         dto.setAmount(amount);
         dto.setTotal(total);
         dto.setInterest(paymentMethodValidatedFields.getInterest());
     }
 
-    private void fillPeople(FlightReservationResponseDTO dto) {
-        List<PersonDTO> people = new ArrayList<>();
-        List<PersonValidFields> personValidatedFields = validFields.getPersonValidatedFields();
-        personValidatedFields.forEach(p -> {
-            PersonDTO personDTO = new PersonDTO()
-                    .setMail(p.getMail())
-                    .setDni(p.getDni())
-                    .setName(p.getName())
-                    .setLastName(p.getLastName())
-                    .setBirthDate(p.getBirthDate());
-            people.add(personDTO);
-        });
-        dto.getFlightReservation().setPeople(people);
-    }
 
     private void fillReservationDto(FlightReservationResponseDTO dto) {
         FlightReservationDTO flightReservation = new FlightReservationDTO();
@@ -80,8 +58,8 @@ public class FlightReservationResponseDTOBuilder {
                 .setOrigin(validFields.getOrigin().getLabel())
                 .setDestination(validFields.getDestination().getLabel())
                 .setSeats(String.valueOf(validFields.getPeopleAmount()))
-                .setSeatType(validFields.getSeatType().getLabel());
-        dto.setFlightReservation(flightReservation);
+                .setSeatType(validFields.getSeatType().getLabel())
+                .setPeople(validFields.getPersonValidatedFields().stream().map(PersonDTOBuilder::fromValidFields).collect(Collectors.toList()));        dto.setFlightReservation(flightReservation);
     }
 
     public FlightReservationResponseDTOBuilder withAmount(double amount) {

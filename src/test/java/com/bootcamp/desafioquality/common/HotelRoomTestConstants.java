@@ -1,9 +1,10 @@
 package com.bootcamp.desafioquality.common;
 
 import com.bootcamp.desafioquality.controller.common.dto.response.StatusCodeDTO;
-import com.bootcamp.desafioquality.controller.hotelroom.dto.BookingDTO;
+import com.bootcamp.desafioquality.controller.hotelroom.dto.request.BookingRequestDTO;
 import com.bootcamp.desafioquality.controller.hotelroom.dto.request.HotelRoomBookingRequestDTO;
 import com.bootcamp.desafioquality.controller.hotelroom.dto.request.PersonDTO;
+import com.bootcamp.desafioquality.controller.hotelroom.dto.response.BookingResponseDTO;
 import com.bootcamp.desafioquality.controller.hotelroom.dto.response.HotelRoomBookingResponseDTO;
 import com.bootcamp.desafioquality.controller.hotelroom.dto.response.HotelRoomBookingResponseDTOBuilder;
 import com.bootcamp.desafioquality.controller.hotelroom.dto.response.HotelRoomResponseDTO;
@@ -34,32 +35,46 @@ public class HotelRoomTestConstants {
             .setHotelName("Hotel2")
             .setLocation("Location2");
 
-    public static final Supplier<BookingDTO> BOOKING_DTO = () -> {
-        BookingDTO bookingDTO = new BookingDTO();
-        bookingDTO.setHotelCode("SE-0001");
-        bookingDTO.setRoomType(RoomType.DOBLE.getLabel());
-        bookingDTO.setPeopleAmount("2");
-        bookingDTO.setDestination(Location.BOGOTA.getLabel());
-        bookingDTO.setDateFrom("25/03/2021");
-        bookingDTO.setDateTo("14/05/2021");
+    public static final Supplier<BookingRequestDTO> BOOKING_REQUEST_DTO = () -> {
+        BookingRequestDTO bookingRequestDTO = new BookingRequestDTO();
+        bookingRequestDTO.setHotelCode("SE-0002");
+        bookingRequestDTO.setRoomType(RoomType.DOBLE.getLabel());
+        bookingRequestDTO.setPeopleAmount("2");
+        bookingRequestDTO.setDestination(Location.BOGOTA.getLabel());
+        bookingRequestDTO.setDateFrom("25/03/2021");
+        bookingRequestDTO.setDateTo("14/05/2021");
         PersonDTO person1 = VALID_PERSON_DTO_1.get();
         PersonDTO person2 = VALID_PERSON_DTO_2.get();
-        bookingDTO.setPeople(List.of(person1, person2));
-        bookingDTO.setPaymentMethod(VALID_PAYMENT_METHOD_DTO_1.get());
-        return bookingDTO;
+        bookingRequestDTO.setPeople(List.of(person1, person2));
+        bookingRequestDTO.setPaymentMethod(VALID_PAYMENT_METHOD_DTO_1.get());
+        return bookingRequestDTO;
+    };
+
+    public static final Supplier<BookingResponseDTO> BOOKING_RESPONSE_DTO = () -> {
+        BookingResponseDTO bookingResponseDTO = new BookingResponseDTO();
+        bookingResponseDTO.setHotelCode("SE-0002");
+        bookingResponseDTO.setRoomType(RoomType.DOBLE.getLabel());
+        bookingResponseDTO.setPeopleAmount("2");
+        bookingResponseDTO.setDestination(Location.BOGOTA.getLabel());
+        bookingResponseDTO.setDateFrom("25/03/2021");
+        bookingResponseDTO.setDateTo("14/05/2021");
+        PersonDTO person1 = VALID_PERSON_DTO_1.get();
+        PersonDTO person2 = VALID_PERSON_DTO_2.get();
+        bookingResponseDTO.setPeople(List.of(person1, person2));
+        return bookingResponseDTO;
     };
 
     public static final Supplier<HotelRoomBookingRequestDTO> VALID_BOOKING_REQUEST = () -> {
         HotelRoomBookingRequestDTO hotelRoomBookingRequestDTO = new HotelRoomBookingRequestDTO();
         hotelRoomBookingRequestDTO.setUserName("mail1@gmail.com");
-        hotelRoomBookingRequestDTO.setBooking(BOOKING_DTO.get());
+        hotelRoomBookingRequestDTO.setBooking(BOOKING_REQUEST_DTO.get());
         return hotelRoomBookingRequestDTO;
     };
 
     public static final HotelRoomBookingResponseDTO HOTEL_ROOM_BOOKING_RESPONSE_DTO_HAPPY =
             new HotelRoomBookingResponseDTO()
             .setUserName("mail1@gmail.com")
-            .setBooking(BOOKING_DTO.get())
+            .setBooking(BOOKING_RESPONSE_DTO.get())
             .setStatusCode(new StatusCodeDTO().setCode(HttpStatus.OK.value()).setMessage(HotelRoomBookingResponseDTOBuilder.SUCCESS_MESSAGE))
             .setAmount(4000d)
             .setInterest(10d)

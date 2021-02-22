@@ -1,10 +1,13 @@
 package com.bootcamp.desafioquality.controller.hotelroom.dto.request;
 
-import com.bootcamp.desafioquality.controller.hotelroom.dto.BookingDTO;
+import javax.validation.constraints.NotEmpty;
+
+import static com.bootcamp.desafioquality.controller.dtoutil.Message.REQUIRED_FIELD;
 
 public class HotelRoomBookingRequestDTO {
-    private String userName;
-    private BookingDTO booking;
+    @NotEmpty(message = REQUIRED_FIELD) private String userName;
+    private BookingRequestDTO booking;
+
 
     public String getUserName() {
         return userName;
@@ -15,11 +18,11 @@ public class HotelRoomBookingRequestDTO {
         return this;
     }
 
-    public BookingDTO getBooking() {
+    public BookingRequestDTO getBooking() {
         return booking;
     }
 
-    public HotelRoomBookingRequestDTO setBooking(BookingDTO booking) {
+    public HotelRoomBookingRequestDTO setBooking(BookingRequestDTO booking) {
         this.booking = booking;
         return this;
     }

@@ -119,8 +119,8 @@ class FlightServiceImplTest {
        StatusCodeDTO statusCode = response.getStatusCode();
        assertThat(statusCode.getCode()).isEqualTo(HttpStatus.OK.value());
        assertThat(statusCode.getMessage()).isEqualTo(FlightReservationResponseDTOBuilder.SUCCESS_MESSAGE);
-       // me aseguro que calcule bien el precio
 
+       // me aseguro que calcule bien el precio
        assertThat(response.getAmount()).isEqualTo(14640d);
        assertThat(response.getInterest()).isEqualTo(5d);
        assertThat(response.getTotal()).isEqualTo(15372d);

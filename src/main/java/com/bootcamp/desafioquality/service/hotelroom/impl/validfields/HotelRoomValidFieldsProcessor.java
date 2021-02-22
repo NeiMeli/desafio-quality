@@ -1,6 +1,6 @@
 package com.bootcamp.desafioquality.service.hotelroom.impl.validfields;
 
-import com.bootcamp.desafioquality.controller.hotelroom.dto.BookingDTO;
+import com.bootcamp.desafioquality.controller.hotelroom.dto.request.BookingRequestDTO;
 import com.bootcamp.desafioquality.controller.hotelroom.dto.request.HotelRoomBookingRequestDTO;
 import com.bootcamp.desafioquality.controller.hotelroom.dto.request.PersonDTO;
 import com.bootcamp.desafioquality.entity.hotel.RoomType;
@@ -47,20 +47,20 @@ public class HotelRoomValidFieldsProcessor extends CommonValidFieldsProcessor {
         }
     }
 
-    public void validateBooking(@Nullable BookingDTO bookingDTO) {
-        if (bookingDTO == null) {
+    public void validateBooking(BookingRequestDTO bookingRequestDTO) {
+        if (bookingRequestDTO == null) {
             throw exceptionSupplier.apply(EMPTY_BOOKING.getMessage());
         }
-        validateDates(bookingDTO.getDateFrom(), bookingDTO.getDateTo());
-        validateDestination(bookingDTO.getDestination());
-        List<PersonDTO> people = bookingDTO.getPeople();
+        validateDates(bookingRequestDTO.getDateFrom(), bookingRequestDTO.getDateTo());
+        validateDestination(bookingRequestDTO.getDestination());
+        List<PersonDTO> people = bookingRequestDTO.getPeople();
         if (people == null || people.isEmpty()) {
             throw exceptionSupplier.apply(FieldProcessorError.EMPTY_PEOPLE_LIST.getMessage());
         }
-        validatePeopleAmount(bookingDTO.getPeopleAmount(), people.size());
-        validateRoomType(bookingDTO.getRoomType());
-        validatePaymentMethod(bookingDTO.getPaymentMethod());
-        validatePeopleList(bookingDTO.getPeople());
+        validatePeopleAmount(bookingRequestDTO.getPeopleAmount(), people.size());
+        validateRoomType(bookingRequestDTO.getRoomType());
+        validatePaymentMethod(bookingRequestDTO.getPaymentMethod());
+        validatePeopleList(bookingRequestDTO.getPeople());
     }
 
     public HotelRoomValidFields validate(HotelRoomBookingRequestDTO requestDTO) {

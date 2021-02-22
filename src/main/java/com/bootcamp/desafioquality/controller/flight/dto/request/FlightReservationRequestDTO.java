@@ -2,6 +2,7 @@ package com.bootcamp.desafioquality.controller.flight.dto.request;
 
 import com.bootcamp.desafioquality.controller.flight.dto.FlightReservationDTO;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
@@ -12,6 +13,7 @@ public class FlightReservationRequestDTO {
     @NotEmpty(message = REQUIRED_FIELD)
     private String userName;
 
+    @Valid
     @NotNull(message = REQUIRED_FIELD)
     private FlightReservationDTO flightReservation;
 

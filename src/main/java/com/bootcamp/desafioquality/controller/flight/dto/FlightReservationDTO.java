@@ -3,6 +3,7 @@ package com.bootcamp.desafioquality.controller.flight.dto;
 import com.bootcamp.desafioquality.controller.hotelroom.dto.request.PaymentMethodDTO;
 import com.bootcamp.desafioquality.controller.hotelroom.dto.request.PersonDTO;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.util.List;
@@ -34,6 +35,7 @@ public class FlightReservationDTO {
     @NotEmpty(message = REQUIRED_FIELD)
     private List<PersonDTO> people;
 
+    @Valid
     @NotNull(message = REQUIRED_FIELD)
     private PaymentMethodDTO paymentMethod;
 

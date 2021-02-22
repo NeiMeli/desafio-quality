@@ -3,7 +3,7 @@ package com.bootcamp.desafioquality;
 import com.bootcamp.desafioquality.common.HotelRoomTestConstants;
 import com.bootcamp.desafioquality.common.JsonUtil;
 import com.bootcamp.desafioquality.controller.common.dto.response.StatusCodeDTO;
-import com.bootcamp.desafioquality.controller.hotelroom.dto.BookingDTO;
+import com.bootcamp.desafioquality.controller.hotelroom.dto.request.BookingRequestDTO;
 import com.bootcamp.desafioquality.controller.hotelroom.dto.request.HotelRoomBookingRequestDTO;
 import com.bootcamp.desafioquality.controller.hotelroom.dto.response.HotelRoomBookingResponseDTO;
 import com.bootcamp.desafioquality.controller.hotelroom.dto.response.HotelRoomBookingResponseDTOBuilder;
@@ -105,12 +105,12 @@ public class HotelRoomIntegrationTest {
         assertThat(statusCode.getCode()).isEqualTo(HttpStatus.OK.value());
         assertThat(statusCode.getMessage()).isEqualTo(HotelRoomBookingResponseDTOBuilder.SUCCESS_MESSAGE);
 
-        assertThat(response.getAmount()).isEqualTo(390000d);
+        assertThat(response.getAmount()).isEqualTo(584000d);
         assertThat(response.getInterest()).isEqualTo(20d);
-        assertThat(response.getTotal()).isEqualTo(468000d);
+        assertThat(response.getTotal()).isEqualTo(700800d);
 
         // me aseguro que la reserva impacte en la BD
-        BookingDTO booking = request.getBooking();
+        BookingRequestDTO booking = request.getBooking();
         HotelRoom hotelRoom = repository.find(booking.getHotelCode()).orElseThrow();
         assertThat(hotelRoom.hasRangeAvailable(DateParser.fromString(booking.getDateFrom()), DateParser.fromString(booking.getDateTo()))).isFalse();
 
@@ -151,7 +151,7 @@ public class HotelRoomIntegrationTest {
                 .andReturn();
         assertThat(mvcResult.getResolvedException())
                 .isInstanceOf(BadRequestException.class)
-                .hasMessageContaining(HotelRoomServiceError.HOTEL_ROOM_NOT_FOUND.getMessage(invalidCode));
+                .hasMessageContaining(HotelRoomServiceError.HOTEL_ROOM_NOT_FOUND.getMessage());
 
         HotelRoomBookingRequestDTO request2 = HotelRoomTestConstants.VALID_BOOKING_REQUEST.get();
         request2.getBooking().setDestination(Location.MEDELLIN.getLabel());
@@ -162,7 +162,7 @@ public class HotelRoomIntegrationTest {
                 .andReturn();
         assertThat(mvcResult2.getResolvedException())
                 .isInstanceOf(BadRequestException.class)
-                .hasMessageContaining(HotelRoomServiceError.HOTEL_AND_LOCATION_MISTMACH.getMessage());
+                .hasMessageContaining(HotelRoomServiceError.HOTEL_ROOM_NOT_FOUND.getMessage());
     }
 
     @Test void testBadRequestCases() throws Exception {

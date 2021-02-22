@@ -100,7 +100,7 @@ class HotelRoomControllerTest {
     @Test
     void testBookingBadRequests() throws Exception {
         when(service.bookHotelRoom(any()))
-                .thenThrow(new HotelRoomServiceException(HotelRoomServiceError.HOTEL_ROOM_NOT_FOUND.getMessage("a")));
+                .thenThrow(new HotelRoomServiceException(HotelRoomServiceError.HOTEL_ROOM_NOT_FOUND.getMessage()));
         String json = JsonUtil.JSON_GENERATOR.apply(VALID_BOOKING_REQUEST.get());
         MvcResult mvcResult = mvc.perform(post(POST_PATH)
                 .contentType(MediaType.APPLICATION_JSON).content(json))
@@ -109,11 +109,6 @@ class HotelRoomControllerTest {
                 .andReturn();
         assertThat(mvcResult.getResolvedException())
                 .isInstanceOf(BadRequestException.class)
-                .hasMessageContaining(HotelRoomServiceError.HOTEL_ROOM_NOT_FOUND.getMessage("a"));
-    }
-
-    @Test
-    void invalidJsonValue() {
-
+                .hasMessageContaining(HotelRoomServiceError.HOTEL_ROOM_NOT_FOUND.getMessage());
     }
 }

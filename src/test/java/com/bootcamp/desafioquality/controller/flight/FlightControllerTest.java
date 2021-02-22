@@ -85,12 +85,10 @@ class FlightControllerTest {
     }
 
 
-
     @Test
     void testReserveHappy() throws Exception {
         when(service.reserveFlight(any()))
                 .thenReturn(FLIGHT_RESERVATION_RESPONSE_DTO_HAPPY);
-        FlightReservationRequestDTO request = VALID_RESERVATION_REQUEST.get();
         MvcResult mvcResult = mvc.perform(post(POST_PATH)
                 .contentType(MediaType.APPLICATION_JSON).content(JSON_REQUEST))
                 .andDo(print())
@@ -129,6 +127,14 @@ class FlightControllerTest {
         reservationRequest.setUserName("user@gmail.com");
         reservationRequest.setFlightReservation(null);
         assertEmptyFieldError(reservationRequest, "flightReservation");
+
+        FlightReservationRequestDTO reservationRequest2 = VALID_RESERVATION_REQUEST.get();
+        reservationRequest2.getFlightReservation().setPaymentMethod(null);
+        assertEmptyFieldError(reservationRequest2, "paymentMethod");
+
+        FlightReservationRequestDTO reservationRequest3 = VALID_RESERVATION_REQUEST.get();
+        reservationRequest3.getFlightReservation().getPaymentMethod().setType(null);
+        assertEmptyFieldError(reservationRequest3, "type");
     }
 
     private void assertEmptyFieldError(FlightReservationRequestDTO request, String fieldName) throws Exception {

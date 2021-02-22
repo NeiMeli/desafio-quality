@@ -5,8 +5,7 @@ public enum HotelRoomServiceError {
     EMPTY_BOOKING("Booking vacio"),
     INVALID_ROOM_TYPE("El tipo de habitación seleccionada no coincide con la cantidad de personas que se alojarán en ella"),
     EMPTY_HOTEL_CODE("No indica codigo de hotel vacio"),
-    HOTEL_ROOM_NOT_FOUND("No existe habitacion con codigo %s"),
-    HOTEL_AND_LOCATION_MISTMACH("No existe un hotel con ese codigo y esa ubicacion");
+    HOTEL_ROOM_NOT_FOUND("No se encontro la habitacion");
 
     public String getMessage(Object ... args) {
         return String.format(message, args);

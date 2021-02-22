@@ -12,7 +12,6 @@ import com.bootcamp.desafioquality.service.flight.exception.FlightServiceError;
 import com.bootcamp.desafioquality.service.flight.query.FlightQuery;
 import com.bootcamp.desafioquality.service.flight.validfields.FlightValidFields;
 import com.bootcamp.desafioquality.service.flight.validfields.FlightValidFieldsProcessor;
-import com.bootcamp.desafioquality.service.util.RoundUtil;
 import com.bootcamp.desafioquality.service.validation.fields.PaymentMethodValidFields;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -2,7 +2,6 @@ package com.bootcamp.desafioquality.repository.flight;
 
 import com.bootcamp.desafioquality.entity.flight.Flight;
 
-import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 

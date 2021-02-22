@@ -45,4 +45,9 @@ public class HotelRoomCacheRespository implements HotelRoomRepository, CacheRepo
     public Optional<HotelRoom> find(String code) {
         return getDatabase().find(code);
     }
+
+    @Override
+    public Optional<HotelRoom> findFirst(Predicate<HotelRoom> predicate) {
+        return getDatabase().findFirst(predicate);
+    }
 }

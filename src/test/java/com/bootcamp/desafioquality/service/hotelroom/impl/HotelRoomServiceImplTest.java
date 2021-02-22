@@ -3,7 +3,7 @@ package com.bootcamp.desafioquality.service.hotelroom.impl;
 import com.bootcamp.desafioquality.common.CacheDBTableMock;
 import com.bootcamp.desafioquality.common.HotelRoomTestConstants;
 import com.bootcamp.desafioquality.controller.common.dto.response.StatusCodeDTO;
-import com.bootcamp.desafioquality.controller.hotelroom.dto.BookingDTO;
+import com.bootcamp.desafioquality.controller.hotelroom.dto.request.BookingRequestDTO;
 import com.bootcamp.desafioquality.controller.hotelroom.dto.request.HotelRoomBookingRequestDTO;
 import com.bootcamp.desafioquality.controller.hotelroom.dto.request.PaymentMethodDTO;
 import com.bootcamp.desafioquality.controller.hotelroom.dto.request.PersonDTO;
@@ -237,75 +237,75 @@ class HotelRoomServiceImplTest {
 
         // Booking nulo
         exceptionAsserter.accept(EMPTY_BOOKING.getMessage());
-        invalidRequest.setBooking(new BookingDTO());
+        invalidRequest.setBooking(new BookingRequestDTO());
 
         final String nullString = "null";
         // fechas invalidas
         // nulos
-        BookingDTO bookingDTO = invalidRequest.getBooking();
+        BookingRequestDTO bookingRequestDTO = invalidRequest.getBooking();
         exceptionAsserter.accept(String.format(ERROR_MESSAGE, nullString));
-        bookingDTO.setDateFrom("04/03/2021");
+        bookingRequestDTO.setDateFrom("04/03/2021");
         // el to sigue siendo nulo
         exceptionAsserter.accept(String.format(ERROR_MESSAGE, nullString));
 
         // rango invalido
-        bookingDTO.setDateTo("03/03/2021");
+        bookingRequestDTO.setDateTo("03/03/2021");
         exceptionAsserter.accept(DateRangeValidator.DateRangeError.INVALID_DATE_TO.getMessage());
-        bookingDTO.setDateTo("04/04/2021");
-        bookingDTO.setDateFrom("05/04/2021");
+        bookingRequestDTO.setDateTo("04/04/2021");
+        bookingRequestDTO.setDateFrom("05/04/2021");
         exceptionAsserter.accept(DateRangeValidator.DateRangeError.INVALID_DATE_TO.getMessage()); // todo mismo mensaje
-        bookingDTO.setDateFrom("04/03/2021");
+        bookingRequestDTO.setDateFrom("04/03/2021");
 
         // Destino invalido
         // nulo
         exceptionAsserter.accept(String.format(LocationNotFoundException.MESSAGE, nullString));
         // invalido
-        bookingDTO.setDestination("non-existent-destination");
+        bookingRequestDTO.setDestination("non-existent-destination");
         exceptionAsserter.accept(String.format(LocationNotFoundException.MESSAGE, "non-existent-destination"));
-        bookingDTO.setDestination(BS_AS.getLabel());
+        bookingRequestDTO.setDestination(BS_AS.getLabel());
 
         // cdad de personas
         // lista de personas vacia
         exceptionAsserter.accept(EMPTY_PEOPLE_LIST.getMessage());
-        bookingDTO.setPeople(new ArrayList<>());
+        bookingRequestDTO.setPeople(new ArrayList<>());
         exceptionAsserter.accept(EMPTY_PEOPLE_LIST.getMessage());
-        bookingDTO.getPeople().add(new PersonDTO());
+        bookingRequestDTO.getPeople().add(new PersonDTO());
 
         // cdad nula
         exceptionAsserter.accept(EMPTY_PEOPLE_AMOUNT.getMessage());
         // tipo de dato invalido
-        bookingDTO.setPeopleAmount("not-an-int");
+        bookingRequestDTO.setPeopleAmount("not-an-int");
         exceptionAsserter.accept(INVALID_PEOPLE_AMOUNT_TYPE.getMessage());
-        bookingDTO.setPeopleAmount("5.5");
+        bookingRequestDTO.setPeopleAmount("5.5");
         exceptionAsserter.accept(INVALID_PEOPLE_AMOUNT_TYPE.getMessage());
         // numero entero invalido
-        bookingDTO.setPeopleAmount("0");
+        bookingRequestDTO.setPeopleAmount("0");
         exceptionAsserter.accept(INVALID_PEOPLE_AMOUNT.getMessage(0));
-        bookingDTO.setPeopleAmount("-1");
+        bookingRequestDTO.setPeopleAmount("-1");
         exceptionAsserter.accept(INVALID_PEOPLE_AMOUNT.getMessage(-1));
         // indica 2 y la lista tiene 1
-        bookingDTO.setPeopleAmount("2");
+        bookingRequestDTO.setPeopleAmount("2");
         exceptionAsserter.accept(PEOPLE_AMOUNT_AND_PEOPLE_LIST_SIZE_MISMATCH.getMessage());
-        bookingDTO.getPeople().add(new PersonDTO());
+        bookingRequestDTO.getPeople().add(new PersonDTO());
 
         // tipo de habitacion
         // nula
         exceptionAsserter.accept(EMPTY_ROOM_TYPE.getMessage());
         // invalida
-        bookingDTO.setRoomType("not-a-room-type");
+        bookingRequestDTO.setRoomType("not-a-room-type");
         exceptionAsserter.accept(String.format(RoomType.RoomTypeNotFoundException.MESSAGE, "not-a-room-type"));
 
         // no tiene capacidad para las personas indicadas (por ahora 2)
-        bookingDTO.setRoomType(RoomType.SINGLE.getLabel());
+        bookingRequestDTO.setRoomType(RoomType.SINGLE.getLabel());
         exceptionAsserter.accept(INVALID_ROOM_TYPE.getMessage());
-        bookingDTO.setRoomType(RoomType.DOBLE.getLabel());
+        bookingRequestDTO.setRoomType(RoomType.DOBLE.getLabel());
 
         // Medio de pago
         // nulo
         exceptionAsserter.accept(FieldProcessorError.EMPTY_PAYMENT_METHOD.getMessage());
         // no tiene numero
         PaymentMethodDTO paymentMethodDTO = new PaymentMethodDTO();
-        bookingDTO.setPaymentMethod(paymentMethodDTO);
+        bookingRequestDTO.setPaymentMethod(paymentMethodDTO);
         exceptionAsserter.accept(FieldProcessorError.EMPTY_CARD_NUMBER.getMessage());
         paymentMethodDTO.setNumber("1234");
         // no tiene tipo
@@ -338,25 +338,26 @@ class HotelRoomServiceImplTest {
         when(repository.getDatabase())
                 .thenReturn(new CacheDBTableMock<>(hotelRoomList));
         when(repository.listWhere(any())).thenCallRealMethod();
+        when(repository.findFirst(any())).thenCallRealMethod();
         when(repository.find(anyString())).thenCallRealMethod();
 
         // todo validacion de personas
         // mientras pongo datos validos
-        bookingDTO.setRoomType(RoomType.SINGLE.getLabel());
-        bookingDTO.setPeopleAmount("1");
-        bookingDTO.getPeople().clear();
-        bookingDTO.getPeople().add(VALID_PERSON_DTO_1.get());
+        bookingRequestDTO.setRoomType(RoomType.SINGLE.getLabel());
+        bookingRequestDTO.setPeopleAmount("1");
+        bookingRequestDTO.getPeople().clear();
+        bookingRequestDTO.getPeople().add(VALID_PERSON_DTO_1.get());
 
         // codigo de hotel
         // nulo
         exceptionAsserter.accept(EMPTY_HOTEL_CODE.getMessage());
         // inexistente
-        bookingDTO.setHotelCode("not-a-hotel-room");
-        exceptionAsserter.accept(HOTEL_ROOM_NOT_FOUND.getMessage("not-a-hotel-room"));
+        bookingRequestDTO.setHotelCode("not-a-hotel-room");
+        exceptionAsserter.accept(HOTEL_ROOM_NOT_FOUND.getMessage());
 
         // hotel y ubicacion no coinciden
-        bookingDTO.setHotelCode("SE-0001");
-        exceptionAsserter.accept(HOTEL_AND_LOCATION_MISTMACH.getMessage());
+        bookingRequestDTO.setHotelCode("SE-0001");
+        exceptionAsserter.accept(HOTEL_ROOM_NOT_FOUND.getMessage());
     }
 
     @Test
@@ -364,6 +365,7 @@ class HotelRoomServiceImplTest {
         List<HotelRoom> hotelRoomList = DATABASE.get();
         when(repository.getDatabase())
                 .thenReturn(new CacheDBTableMock<>(hotelRoomList));
+        when(repository.findFirst(any())).thenCallRealMethod();
         when(repository.find(anyString())).thenCallRealMethod();
 
         HotelRoomBookingRequestDTO request = HotelRoomTestConstants.VALID_BOOKING_REQUEST.get();
@@ -372,12 +374,12 @@ class HotelRoomServiceImplTest {
         assertThat(statusCode.getCode()).isEqualTo(HttpStatus.OK.value());
         assertThat(statusCode.getMessage()).isEqualTo(HotelRoomBookingResponseDTOBuilder.SUCCESS_MESSAGE);
 
-        assertThat(response.getAmount()).isEqualTo(390000d);
+        assertThat(response.getAmount()).isEqualTo(584000d);
         assertThat(response.getInterest()).isEqualTo(20d);
-        assertThat(response.getTotal()).isEqualTo(468000d);
+        assertThat(response.getTotal()).isEqualTo(700800d);
 
         // tengo que asgurarme que la habitacion quedó sin disponibilidad en esa fecha
-        BookingDTO booking = request.getBooking();
+        BookingRequestDTO booking = request.getBooking();
         HotelRoom hotelRoom = repository.find(booking.getHotelCode()).orElseThrow();
         assertThat(hotelRoom.hasRangeAvailable(DateParser.fromString(booking.getDateFrom()), DateParser.fromString(booking.getDateTo()))).isFalse();
         // si hago el mismo request, va a dar error
@@ -405,6 +407,7 @@ class HotelRoomServiceImplTest {
         List<HotelRoom> hotelRoomList = DATABASE.get();
         when(repository.getDatabase())
                 .thenReturn(new CacheDBTableMock<>(hotelRoomList));
+        when(repository.findFirst(any())).thenCallRealMethod();
         when(repository.find(anyString())).thenCallRealMethod();
 
         HotelRoomBookingRequestDTO request = HotelRoomTestConstants.VALID_BOOKING_REQUEST.get();

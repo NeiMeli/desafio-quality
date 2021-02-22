@@ -10,4 +10,6 @@ public interface HotelRoomRepository {
     Stream<HotelRoom> listWhere(Predicate<HotelRoom> predicate);
 
     Optional<HotelRoom> find(String code);
+
+    Optional<HotelRoom> findFirst(Predicate<HotelRoom> predicate);
 }
