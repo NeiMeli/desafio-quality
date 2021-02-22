@@ -15,14 +15,14 @@ import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 @Repository
-public class FlightCacheRepository implements FlightRepository, CacheRepository<String, Flight> {
-    final CacheDBTable<String, Flight> database;
+public class FlightCacheRepository implements FlightRepository, CacheRepository<Integer, Flight> {
+    final CacheDBTable<Integer, Flight> database;
 
     public FlightCacheRepository() throws Exception {
         database = new CacheDBTable<>() {
             @Override
-            protected @NotNull String generateNextId() {
-                throw new BadRequestException("No se puede guardar un vuelo sin código!");
+            protected @NotNull Integer generateNextId() {
+                return size() + 1;
             }
         };
         JsonNode jsonNodes = JsonDBUtil.parseDatabase("src/main/resources/database/json/flights.json");
@@ -31,17 +31,12 @@ public class FlightCacheRepository implements FlightRepository, CacheRepository<
         }
     }
     @Override
-    public CacheDBTable<String, Flight> getDatabase() {
+    public CacheDBTable<Integer, Flight> getDatabase() {
         return this.database;
     }
 
     @Override
     public Stream<Flight> listWhere(Predicate<Flight> predicate) {
         return getDatabase().listWhere(predicate);
-    }
-
-    @Override
-    public Optional<Flight> find(String flightNumber) {
-        return getDatabase().find(flightNumber);
     }
 }

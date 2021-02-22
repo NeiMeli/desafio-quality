@@ -13,7 +13,6 @@ public enum HotelRoomServiceError {
     }
 
     private final String message;
-
     HotelRoomServiceError(String msg) {
         this.message = msg;
     }

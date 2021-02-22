@@ -97,6 +97,9 @@ public abstract class CommonValidFieldsProcessor {
     }
 
     protected void validatePeopleList(List<PersonDTO> peopleList) {
+        if (peopleList.isEmpty()) {
+            throw exceptionSupplier.apply(FieldProcessorError.EMPTY_PEOPLE_LIST.getMessage());
+        }
         peopleList.forEach(personDTO -> getValidatedFields().getPersonValidatedFields().add(personValidFieldsProcessor.validate(personDTO)));
     }
 }

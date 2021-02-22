@@ -9,7 +9,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class Flight implements Persistable<String> {
+public class Flight implements Persistable<Integer> {
     private String code;
     private Location origin;
     private Location destination;
@@ -17,6 +17,7 @@ public class Flight implements Persistable<String> {
     private double price;
     private Date dateFrom;
     private Date dateTo;
+    private int id;
 
     public static Flight fromJson(JsonNode jn) {
         Flight flight = new Flight();
@@ -102,17 +103,17 @@ public class Flight implements Persistable<String> {
     }
 
     @Override
-    public String getPrimaryKey() {
-        return this.code;
+    public Integer getPrimaryKey() {
+        return this.id;
     }
 
     @Override
     public boolean isNew() {
-        return false;
+        return id == 0;
     }
 
     @Override
-    public void setId(@NotNull String id) {
-        setCode(id);
+    public void setId(@NotNull Integer id) {
+        this.id = id;
     }
 }

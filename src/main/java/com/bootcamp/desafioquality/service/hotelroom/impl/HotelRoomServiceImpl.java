@@ -26,6 +26,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import static com.bootcamp.desafioquality.service.util.RoundUtil.roundTwoDecimals;
+
 @Service
 public class HotelRoomServiceImpl implements HotelRoomService {
     @Autowired
@@ -49,6 +51,7 @@ public class HotelRoomServiceImpl implements HotelRoomService {
             processHotelRoomReservation(validatedFields.getDateFrom(), validatedFields.getDateTo(), hotelRoom);
         } catch (RoomNotAvailableException e) {
             responseBuilder.withError(e.getMessage());
+            return responseBuilder.build();
         }
         responseBuilder.withAmount(calculateAmount(validatedFields.getDateFrom(), validatedFields.getDateTo(), hotelRoom.getPrice(), validatedFields.getPeopleAmount()));
         responseBuilder.withInterest(validatedFields.getPaymentMethodValidatedFields().getInterest());
@@ -57,7 +60,7 @@ public class HotelRoomServiceImpl implements HotelRoomService {
 
     private double calculateAmount(Date dateFrom, Date dateTo, double price, int peopleAmount) {
         int days = DateParser.getDaysBetween(dateFrom, dateTo);
-        return days * price * peopleAmount;
+        return roundTwoDecimals(days * price * peopleAmount);
     }
 
     private void processHotelRoomReservation(Date dateFrom, Date dateTo, HotelRoom hotelRoom) throws RoomNotAvailableException {

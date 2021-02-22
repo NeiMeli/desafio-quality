@@ -1,8 +1,18 @@
 package com.bootcamp.desafioquality.controller.hotelroom.dto.request;
 
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+
+import static com.bootcamp.desafioquality.controller.dtoutil.Message.REQUIRED_FIELD;
+
 public class PaymentMethodDTO {
+    @NotEmpty(message = REQUIRED_FIELD)
     private String type;
+
+    @NotEmpty(message = REQUIRED_FIELD)
     private String number;
+
+    @NotNull(message = REQUIRED_FIELD)
     private Integer dues;
 
     public String getType() {

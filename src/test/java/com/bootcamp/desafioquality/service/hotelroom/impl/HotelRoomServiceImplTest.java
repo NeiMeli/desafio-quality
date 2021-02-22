@@ -35,7 +35,7 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import static com.bootcamp.desafioquality.common.HotelRoomTestConstants.DATABASE;
-import static com.bootcamp.desafioquality.common.HotelRoomTestConstants.VALID_PERSON_DTO_1;
+import static com.bootcamp.desafioquality.common.PersonConstants.VALID_PERSON_DTO_1;
 import static com.bootcamp.desafioquality.date.DateParser.ERROR_MESSAGE;
 import static com.bootcamp.desafioquality.entity.location.Location.*;
 import static com.bootcamp.desafioquality.service.hotelroom.exception.HotelRoomServiceError.*;

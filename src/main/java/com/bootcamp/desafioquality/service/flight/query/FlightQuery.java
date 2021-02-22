@@ -10,19 +10,21 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Date;
+import java.util.function.Function;
 
 import static com.bootcamp.desafioquality.service.flight.query.FlightQueryParam.*;
 
 public class FlightQuery extends Query<FlightQueryParam, Flight> {
+    public static final Function<String, RuntimeException> EXCEPTION_SUPPLIER = FlightQueryException::new;
     private final DateRangeValidator dateRangeValidator;
 
     public FlightQuery() {
-        this.dateRangeValidator = new DateRangeValidator(FlightQueryException::new);
+        this.dateRangeValidator = new DateRangeValidator(EXCEPTION_SUPPLIER);
     }
 
     public FlightQuery withDateFrom(@Nullable String dateFrom) {
         if (dateFrom != null) {
-            Date date = DateParser.fromStringOrElseThrow(dateFrom, FlightQueryException::new);
+            Date date = DateParser.fromStringOrElseThrow(dateFrom, EXCEPTION_SUPPLIER);
             withDateFrom(date);
         }
         return this;
@@ -86,8 +88,24 @@ public class FlightQuery extends Query<FlightQueryParam, Flight> {
 
     public void withSeatType(String seatType) {
         if (seatType != null) {
-            SeatType type = SeatType.fromLabel(seatType);
+            SeatType type = SeatType.fromLabelOrElseThrow(seatType, EXCEPTION_SUPPLIER);
             withSeatType(type);
         }
+    }
+
+    public void withoutOrigin() {
+        filters.remove(ORIGIN);
+    }
+
+    public void withoutDestination() {
+        filters.remove(DESTINATION);
+    }
+
+    public void withoutDateFrom() {
+        filters.remove(DATE_FROM);
+    }
+
+    public void withoutDateTo() {
+        filters.remove(DATE_TO);
     }
 }

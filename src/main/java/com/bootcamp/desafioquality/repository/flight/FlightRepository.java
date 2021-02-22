@@ -8,5 +8,4 @@ import java.util.stream.Stream;
 
 public interface FlightRepository {
     Stream<Flight> listWhere(Predicate<Flight> predicate);
-    Optional<Flight> find(String flightNumber);
 }

@@ -1,5 +1,6 @@
 package com.bootcamp.desafioquality.controller.flight.dto.response;
 
+import com.bootcamp.desafioquality.controller.common.dto.response.StatusCodeDTO;
 import com.bootcamp.desafioquality.controller.flight.dto.FlightReservationDTO;
 import com.bootcamp.desafioquality.controller.hotelroom.dto.request.PaymentMethodDTO;
 import com.bootcamp.desafioquality.controller.hotelroom.dto.request.PersonDTO;
@@ -7,18 +8,25 @@ import com.bootcamp.desafioquality.date.DateParser;
 import com.bootcamp.desafioquality.service.flight.validfields.FlightValidFields;
 import com.bootcamp.desafioquality.service.validation.fields.PaymentMethodValidFields;
 import com.bootcamp.desafioquality.service.validation.fields.PersonValidFields;
+import org.jetbrains.annotations.Nullable;
+import org.springframework.http.HttpStatus;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class FlightReservationResponseDTOBuilder {
+    public static final String SUCCESS_MESSAGE = "El proceso termino satisfactoriamente";
     private final FlightValidFields validFields;
     private double amount;
     private double total;
     private String flightNumber;
+    private @Nullable String error = null;
+    private HttpStatus status;
+
 
     public FlightReservationResponseDTOBuilder(FlightValidFields validFields) {
         this.validFields = validFields;
+        this.status = HttpStatus.OK;
     }
 
     public FlightReservationResponseDTO build() {
@@ -26,7 +34,15 @@ public class FlightReservationResponseDTOBuilder {
         dto.setUserName(validFields.getEmail());
         fillReservationDto(dto);
         fillPeople(dto);
-        fillPayment(dto);
+        StatusCodeDTO statusCode = new StatusCodeDTO();
+        statusCode.setCode(status.value());
+        if (error != null) {
+            statusCode.setMessage(error);
+        } else {
+            fillPayment(dto);
+            statusCode.setMessage(SUCCESS_MESSAGE);
+        }
+        dto.setStatusCode(statusCode);
         return dto;
     }
 
@@ -81,5 +97,13 @@ public class FlightReservationResponseDTOBuilder {
     public FlightReservationResponseDTOBuilder withFlightNumber(String code) {
         this.flightNumber = code;
         return this;
+    }
+
+    public void withError(String error) {
+        this.error = error;
+    }
+
+    public void withStatus(HttpStatus status) {
+        this.status = status;
     }
 }
