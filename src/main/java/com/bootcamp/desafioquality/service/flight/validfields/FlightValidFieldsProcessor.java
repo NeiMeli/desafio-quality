@@ -1,6 +1,6 @@
 package com.bootcamp.desafioquality.service.flight.validfields;
 
-import com.bootcamp.desafioquality.controller.flight.dto.FlightReservationDTO;
+import com.bootcamp.desafioquality.controller.flight.dto.request.FlightReservationDetailRequestDTO;
 import com.bootcamp.desafioquality.controller.flight.dto.request.FlightReservationRequestDTO;
 import com.bootcamp.desafioquality.controller.hotelroom.dto.request.PersonDTO;
 import com.bootcamp.desafioquality.entity.flight.SeatType;
@@ -31,7 +31,7 @@ public class FlightValidFieldsProcessor extends CommonValidFieldsProcessor {
         return validFields;
     }
 
-    private void validateFlightReservation(FlightReservationDTO flightReservation) {
+    private void validateFlightReservation(FlightReservationDetailRequestDTO flightReservation) {
         validateDates(flightReservation.getDateFrom(), flightReservation.getDateTo());
         validateOrigin(flightReservation.getOrigin());
         validateDestination(flightReservation.getDestination());

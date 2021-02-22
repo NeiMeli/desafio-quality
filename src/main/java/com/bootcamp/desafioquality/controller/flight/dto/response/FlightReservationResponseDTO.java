@@ -1,14 +1,15 @@
 package com.bootcamp.desafioquality.controller.flight.dto.response;
 
 import com.bootcamp.desafioquality.controller.common.dto.response.StatusCodeDTO;
-import com.bootcamp.desafioquality.controller.flight.dto.FlightReservationDTO;
+import com.fasterxml.jackson.annotation.JsonInclude;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class FlightReservationResponseDTO {
     private String userName;
     private Double amount;
     private Double interest;
     private Double total;
-    private FlightReservationDTO flightReservation;
+    private FlightReservationDetailResponseDTO flightReservation;
     private StatusCodeDTO statusCode;
 
     public String getUserName() {
@@ -47,11 +48,11 @@ public class FlightReservationResponseDTO {
         return this;
     }
 
-    public FlightReservationDTO getFlightReservation() {
+    public FlightReservationDetailResponseDTO getFlightReservation() {
         return flightReservation;
     }
 
-    public FlightReservationResponseDTO setFlightReservation(FlightReservationDTO flightReservation) {
+    public FlightReservationResponseDTO setFlightReservation(FlightReservationDetailResponseDTO flightReservation) {
         this.flightReservation = flightReservation;
         return this;
     }

@@ -1,4 +1,4 @@
-package com.bootcamp.desafioquality.controller.flight.dto;
+package com.bootcamp.desafioquality.controller.flight.dto.request;
 
 import com.bootcamp.desafioquality.controller.hotelroom.dto.request.PaymentMethodDTO;
 import com.bootcamp.desafioquality.controller.hotelroom.dto.request.PersonDTO;
@@ -10,7 +10,7 @@ import java.util.List;
 
 import static com.bootcamp.desafioquality.controller.dtoutil.Message.REQUIRED_FIELD;
 
-public class FlightReservationDTO {
+public class FlightReservationDetailRequestDTO {
     @NotEmpty(message = REQUIRED_FIELD)
     private String dateFrom;
 
@@ -43,7 +43,7 @@ public class FlightReservationDTO {
         return dateFrom;
     }
 
-    public FlightReservationDTO setDateFrom(String dateFrom) {
+    public FlightReservationDetailRequestDTO setDateFrom(String dateFrom) {
         this.dateFrom = dateFrom;
         return this;
     }
@@ -52,7 +52,7 @@ public class FlightReservationDTO {
         return dateTo;
     }
 
-    public FlightReservationDTO setDateTo(String dateTo) {
+    public FlightReservationDetailRequestDTO setDateTo(String dateTo) {
         this.dateTo = dateTo;
         return this;
     }
@@ -61,7 +61,7 @@ public class FlightReservationDTO {
         return origin;
     }
 
-    public FlightReservationDTO setOrigin(String origin) {
+    public FlightReservationDetailRequestDTO setOrigin(String origin) {
         this.origin = origin;
         return this;
     }
@@ -70,7 +70,7 @@ public class FlightReservationDTO {
         return destination;
     }
 
-    public FlightReservationDTO setDestination(String destination) {
+    public FlightReservationDetailRequestDTO setDestination(String destination) {
         this.destination = destination;
         return this;
     }
@@ -79,7 +79,7 @@ public class FlightReservationDTO {
         return flightNumber;
     }
 
-    public FlightReservationDTO setFlightNumber(String flightNumber) {
+    public FlightReservationDetailRequestDTO setFlightNumber(String flightNumber) {
         this.flightNumber = flightNumber;
         return this;
     }
@@ -88,7 +88,7 @@ public class FlightReservationDTO {
         return seats;
     }
 
-    public FlightReservationDTO setSeats(String seats) {
+    public FlightReservationDetailRequestDTO setSeats(String seats) {
         this.seats = seats;
         return this;
     }
@@ -97,7 +97,7 @@ public class FlightReservationDTO {
         return seatType;
     }
 
-    public FlightReservationDTO setSeatType(String seatType) {
+    public FlightReservationDetailRequestDTO setSeatType(String seatType) {
         this.seatType = seatType;
         return this;
     }
@@ -106,7 +106,7 @@ public class FlightReservationDTO {
         return people;
     }
 
-    public FlightReservationDTO setPeople(List<PersonDTO> people) {
+    public FlightReservationDetailRequestDTO setPeople(List<PersonDTO> people) {
         this.people = people;
         return this;
     }
@@ -115,7 +115,7 @@ public class FlightReservationDTO {
         return paymentMethod;
     }
 
-    public FlightReservationDTO setPaymentMethod(PaymentMethodDTO paymentMethod) {
+    public FlightReservationDetailRequestDTO setPaymentMethod(PaymentMethodDTO paymentMethod) {
         this.paymentMethod = paymentMethod;
         return this;
     }

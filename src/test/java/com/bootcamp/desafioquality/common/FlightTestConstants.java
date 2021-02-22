@@ -1,8 +1,9 @@
 package com.bootcamp.desafioquality.common;
 
 import com.bootcamp.desafioquality.controller.common.dto.response.StatusCodeDTO;
-import com.bootcamp.desafioquality.controller.flight.dto.FlightReservationDTO;
+import com.bootcamp.desafioquality.controller.flight.dto.request.FlightReservationDetailRequestDTO;
 import com.bootcamp.desafioquality.controller.flight.dto.request.FlightReservationRequestDTO;
+import com.bootcamp.desafioquality.controller.flight.dto.response.FlightReservationDetailResponseDTO;
 import com.bootcamp.desafioquality.controller.flight.dto.response.FlightReservationResponseDTO;
 import com.bootcamp.desafioquality.controller.flight.dto.response.FlightReservationResponseDTOBuilder;
 import com.bootcamp.desafioquality.controller.flight.dto.response.FlightResponseDTO;
@@ -21,8 +22,8 @@ import static com.bootcamp.desafioquality.common.PersonConstants.VALID_PERSON_DT
 
 public class FlightTestConstants {
     public static final Supplier<List<Flight>> DATABASE;
-    public static final Supplier<FlightReservationDTO> VALID_RESERVATION_DTO_1 = () -> {
-        FlightReservationDTO reservation = new FlightReservationDTO();
+    public static final Supplier<FlightReservationDetailRequestDTO> VALID_RESERVATION_DETAIL_REQUEST_DTO_1 = () -> {
+        FlightReservationDetailRequestDTO reservation = new FlightReservationDetailRequestDTO();
         reservation.setPeople(List.of(VALID_PERSON_DTO_1.get(), VALID_PERSON_DTO_2.get()))
                 .setFlightNumber("BATU-5536")
                 .setSeats("2")
@@ -35,10 +36,24 @@ public class FlightTestConstants {
         reservation.setPaymentMethod(PaymentMethodConstants.VALID_PAYMENT_METHOD_DTO_2.get());
         return reservation;
     };
+
+    public static final Supplier<FlightReservationDetailResponseDTO> VALID_RESERVATION_DETAIL_RESPONSE_DTO_1 = () -> {
+        FlightReservationDetailResponseDTO reservation = new FlightReservationDetailResponseDTO();
+        reservation.setPeople(List.of(VALID_PERSON_DTO_1.get(), VALID_PERSON_DTO_2.get()))
+                .setFlightNumber("BATU-5536")
+                .setSeats("2")
+                .setFlightNumber("BATU-5536")
+                .setDateFrom("10/02/2021")
+                .setDateTo("17/02/2021")
+                .setOrigin("Buenos Aires")
+                .setDestination("Tucumán")
+                .setSeatType("Economy");
+        return reservation;
+    };
     public static final Supplier<FlightReservationRequestDTO> VALID_RESERVATION_REQUEST = () -> {
         FlightReservationRequestDTO reservationRequest = new FlightReservationRequestDTO();
         reservationRequest.setUserName("mail1@gmail.com");
-        reservationRequest.setFlightReservation(VALID_RESERVATION_DTO_1.get());
+        reservationRequest.setFlightReservation(VALID_RESERVATION_DETAIL_REQUEST_DTO_1.get());
         return reservationRequest;
     };
 
@@ -60,14 +75,15 @@ public class FlightTestConstants {
             .setSeatType("Business");
 
     public static final FlightReservationResponseDTO FLIGHT_RESERVATION_RESPONSE_DTO_HAPPY = new FlightReservationResponseDTO()
-            .setFlightReservation(VALID_RESERVATION_DTO_1.get())
+            .setFlightReservation(VALID_RESERVATION_DETAIL_RESPONSE_DTO_1.get())
             .setUserName("mail1@gmail.com")
             .setAmount(1000d)
             .setTotal(1200d)
             .setInterest(20d)
             .setStatusCode(new StatusCodeDTO().setCode(HttpStatus.OK.value()).setMessage(FlightReservationResponseDTOBuilder.SUCCESS_MESSAGE));
+
     public static final FlightReservationResponseDTO FLIGHT_RESERVATION_RESPONSE_DTO_NOT_FOUND = new FlightReservationResponseDTO()
-            .setFlightReservation(VALID_RESERVATION_DTO_1.get())
+            .setFlightReservation(VALID_RESERVATION_DETAIL_RESPONSE_DTO_1.get())
             .setUserName("mail1@gmail.com")
             .setStatusCode(new StatusCodeDTO().setCode(HttpStatus.NOT_FOUND.value()).setMessage(FlightServiceError.FLIGHT_NOT_FOUND.getMessage()));
 

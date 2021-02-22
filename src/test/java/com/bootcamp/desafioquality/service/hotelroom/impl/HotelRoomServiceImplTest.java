@@ -20,7 +20,6 @@ import com.bootcamp.desafioquality.repository.hotelroom.impl.HotelRoomCacheRespo
 import com.bootcamp.desafioquality.service.hotelroom.exception.HotelRoomServiceException;
 import com.bootcamp.desafioquality.service.hotelroom.impl.exception.RoomNotAvailableException;
 import com.bootcamp.desafioquality.service.hotelroom.impl.query.HotelRoomQuery;
-import com.bootcamp.desafioquality.service.hotelroom.impl.query.HotelRoomQueryException;
 import com.bootcamp.desafioquality.service.validation.error.FieldProcessorError;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +36,8 @@ import java.util.stream.IntStream;
 import static com.bootcamp.desafioquality.common.HotelRoomTestConstants.DATABASE;
 import static com.bootcamp.desafioquality.common.PersonConstants.VALID_PERSON_DTO_1;
 import static com.bootcamp.desafioquality.date.DateParser.ERROR_MESSAGE;
-import static com.bootcamp.desafioquality.entity.location.Location.*;
+import static com.bootcamp.desafioquality.entity.location.Location.BS_AS;
+import static com.bootcamp.desafioquality.entity.location.Location.LocationNotFoundException;
 import static com.bootcamp.desafioquality.service.hotelroom.exception.HotelRoomServiceError.*;
 import static com.bootcamp.desafioquality.service.validation.error.FieldProcessorError.*;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -201,30 +201,6 @@ class HotelRoomServiceImplTest {
     }
 
     @Test
-    void testQueryBadRequests() {
-        HotelRoomQuery hotelRoomQuery = new HotelRoomQuery();
-        // ubicacion invalida
-        String invalidLocation = "non-existent-destination";
-        assertThatExceptionOfType(LocationNotFoundException.class)
-                .isThrownBy(() -> hotelRoomQuery.withDestinations(invalidLocation))
-                .withMessageContaining(LocationNotFoundException.MESSAGE, invalidLocation);
-
-        // fecha hasta invalida
-        hotelRoomQuery.withDateFrom("12/02/2021");
-        String invalidDateTo = "11/02/2021";
-        assertThatExceptionOfType(HotelRoomQueryException.class)
-                .isThrownBy(() -> hotelRoomQuery.withDateTo(invalidDateTo))
-                .withMessageContaining(DateRangeValidator.DateRangeError.INVALID_DATE_TO.getMessage());
-
-        // fecha desde invalida
-        hotelRoomQuery.withDateTo("14/02/2021");
-        String invalidDateFrom = "14/02/2021";
-        assertThatExceptionOfType(HotelRoomQueryException.class)
-                .isThrownBy(() -> hotelRoomQuery.withDateFrom(invalidDateFrom))
-                .withMessageContaining(DateRangeValidator.DateRangeError.INVALID_DATE_FROM.getMessage());
-    }
-
-    @Test
     void testBookingBadRequests() {
         HotelRoomBookingRequestDTO invalidRequest = new HotelRoomBookingRequestDTO();
         Consumer<String> exceptionAsserter = message ->
@@ -341,8 +317,6 @@ class HotelRoomServiceImplTest {
         when(repository.findFirst(any())).thenCallRealMethod();
         when(repository.find(anyString())).thenCallRealMethod();
 
-        // todo validacion de personas
-        // mientras pongo datos validos
         bookingRequestDTO.setRoomType(RoomType.SINGLE.getLabel());
         bookingRequestDTO.setPeopleAmount("1");
         bookingRequestDTO.getPeople().clear();

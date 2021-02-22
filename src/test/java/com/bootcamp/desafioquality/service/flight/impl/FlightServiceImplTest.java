@@ -145,7 +145,7 @@ class FlightServiceImplTest {
               assertThatExceptionOfType(FlightServiceException.class)
                       .isThrownBy(() -> service.reserveFlight(request))
                       .withMessageContaining(message);
-      Consumer<FlightReservationRequestDTO> resetReservation = dto -> dto.setFlightReservation(VALID_RESERVATION_DTO_1.get());
+      Consumer<FlightReservationRequestDTO> resetReservation = dto -> dto.setFlightReservation(VALID_RESERVATION_DETAIL_REQUEST_DTO_1.get());
       // email invalido
       exceptionAsserter.accept(VALID_RESERVATION_REQUEST.get().setUserName("invalid-mail"), FieldProcessorError.INVALID_MAIL_FORMAT.getMessage());
 

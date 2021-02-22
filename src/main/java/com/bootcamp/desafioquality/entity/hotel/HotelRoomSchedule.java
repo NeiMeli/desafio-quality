@@ -67,4 +67,8 @@ public class HotelRoomSchedule {
     public boolean isDateAvailable(Date date) {
         return availableRanges.stream().anyMatch(dr -> dr.isWithinRange(date));
     }
+
+    public List<DateRange> getAvailableRanges() {
+        return availableRanges;
+    }
 }

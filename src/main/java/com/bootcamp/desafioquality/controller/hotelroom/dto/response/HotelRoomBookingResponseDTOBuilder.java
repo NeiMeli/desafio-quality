@@ -60,6 +60,7 @@ public class HotelRoomBookingResponseDTOBuilder {
                 .setRoomType(validFields.getRoomType().getLabel())
                 .setPeopleAmount(String.valueOf(validFields.getPeopleAmount()))
                 .setPeople(validFields.getPersonValidatedFields().stream().map(PersonDTOBuilder::fromValidFields).collect(Collectors.toList()));
+        dto.setBooking(bookingResponseDTO);
     }
 
     public void withAmount(double amount) {

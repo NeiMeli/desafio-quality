@@ -1,7 +1,9 @@
 package com.bootcamp.desafioquality.controller.hotelroom.dto.response;
 
 import com.bootcamp.desafioquality.controller.common.dto.response.StatusCodeDTO;
+import com.fasterxml.jackson.annotation.JsonInclude;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class HotelRoomBookingResponseDTO {
     private String userName;
     private Double amount;

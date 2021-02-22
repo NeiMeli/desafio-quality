@@ -10,6 +10,7 @@ import org.jetbrains.annotations.NotNull;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 public class HotelRoom implements Persistable<String> {
     private String code;
@@ -138,5 +139,9 @@ public class HotelRoom implements Persistable<String> {
 
     public DateRange getNextAvailableRange() {
         return schedule.getNextAvailableRange();
+    }
+
+    public List<DateRange> getAvailableDateRanges() {
+        return schedule.getAvailableRanges();
     }
 }

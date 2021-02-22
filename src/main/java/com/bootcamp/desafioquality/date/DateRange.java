@@ -34,4 +34,8 @@ public class DateRange {
     public boolean isWithinRange(Date date) {
         return dateFrom.compareTo(date) <= 0 && dateTo.compareTo(date) >= 0;
     }
+
+    public String describe() {
+        return String.format("Del %s al %s", DateParser.toString(dateFrom), DateParser.toString(dateTo));
+    }
 }

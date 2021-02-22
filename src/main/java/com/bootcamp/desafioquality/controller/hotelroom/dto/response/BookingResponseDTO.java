@@ -1,9 +1,11 @@
 package com.bootcamp.desafioquality.controller.hotelroom.dto.response;
 
 import com.bootcamp.desafioquality.controller.hotelroom.dto.request.PersonDTO;
+import com.fasterxml.jackson.annotation.JsonInclude;
 
 import java.util.List;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class BookingResponseDTO {
      private String dateFrom;
      private String dateTo;
